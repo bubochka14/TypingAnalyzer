@@ -8,6 +8,7 @@ find_package(Qt6 REQUIRED COMPONENTS Core Gui Qml Quick QuickControls2 LinguistT
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_VS_INCLUDE_INSTALL_TO_DEFAULT_BUILD 1)
+set (CMAKE_CXX_STANDARD 20)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -16,5 +17,5 @@ if (POLICY CMP0141)
 endif()
 
 # Включите подпроекты.
-add_subdirectory ("KeyboardAnalyzer")
-add_subdirectory ("WinKeyboardCapture")
+add_subdirectory ("src")
+add_subdirectory ("KeyboardWatcher")

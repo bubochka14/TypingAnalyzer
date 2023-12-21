@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 11.0.2, 2023-11-14T21:16:22. -->
+<!-- Written by QtCreator 11.0.2, 2023-12-19T22:30:54. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -81,6 +81,10 @@
     <valuelist type="QVariantList" key="ClangTools.SelectedFiles"/>
     <valuelist type="QVariantList" key="ClangTools.SuppressedDiagnostics"/>
     <value type="bool" key="ClangTools.UseGlobalSettings">true</value>
+   </valuemap>
+   <valuemap type="QVariantMap" key="ClangdSettings">
+    <value type="bool" key="blockIndexing">true</value>
+    <value type="bool" key="useGlobalSettings">true</value>
    </valuemap>
   </valuemap>
  </data>
@@ -396,7 +400,7 @@
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/Denis/source/repos/build-KeyboardAnalyzer-Desktop_Qt_6_5_2_MinGW_64_bit-Debug/KeyboardAnalyzer</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/Denis/source/repos/build-KeyboardAnalyzer-Desktop_Qt_6_5_2_MinGW_64_bit-Debug/src</value>
    </valuemap>
    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>
