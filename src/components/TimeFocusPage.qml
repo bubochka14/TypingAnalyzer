@@ -4,11 +4,12 @@ import QtQuick.Controls 6.2
 import QtQuick.Layouts
 import KeyboardAnalyzer
 import QtMultimedia
-import KeyboardInterceptor
 MainWindowPage {
     id: root
     property int updateInterval: 1000
     property string currentPeriodType
+    property list<typingRate> rates
+    onRatesChanged:{console.log("new",rates)}
     function start()
     {
         updateTimer.start();
@@ -18,7 +19,6 @@ MainWindowPage {
     {
 
     }
-    Component.onCompleted: {statisticsDial.open(); state ="started"}
     name: "Time Focus Page"
     iconSource: Qt.resolvedUrl("pics/coffee")
     padding: 20
@@ -36,14 +36,29 @@ MainWindowPage {
             PropertyChanges {target: tfPanel; inputFieldsVisible: false}
             PropertyChanges {target: acceptBtn;enabled: false}
             PropertyChanges {target: stopBtn;enabled: true}
-            StateChangeScript {name: "breakScript";script:{sp.enabled = false; periodChangeSound.play()}}
+            StateChangeScript {name: "breakScript";script:{
+                    analyzer.stop();
+                    sp.enabled = false;
+                    statisticsDial.st.rates = root.rates
+                   statisticsDial.show();
+                    periodChangeSound.play();
+
+                }
+            }
         },
         State {
             name: "work"
             PropertyChanges {target: tfPanel; inputFieldsVisible: false}
             PropertyChanges {target: acceptBtn;enabled: false}
             PropertyChanges {target: stopBtn;enabled: true}
-            StateChangeScript {name: "workScript";script: {sp.enabled = true; periodChangeSound.play()}}
+            StateChangeScript {name: "workScript";script: {
+                    analyzer.reset();
+                    analyzer.start();
+                    root.rates = [];
+                    statisticsDial.close();
+                    sp.enabled = true;
+                    periodChangeSound.play()}
+            }
         },
         State {
             name: "notStarted"
@@ -53,7 +68,6 @@ MainWindowPage {
             StateChangeScript {name: "notStartedScript"; script: {sp.enabled = false;updateTimer.stop(); tfPanel.apply()}}
         }
     ]
-    onStateChanged: console.log(state)
     Timer{
         id: updateTimer
         interval: updateInterval
@@ -70,8 +84,11 @@ MainWindowPage {
                     root.state = cell.type;
                 remainingTime -= interval
                 if(remainingTime<=0)
-                {remainingTime =0;
-                    tfPanel.model.setProperty(i,"completed",true)}
+                {
+                    remainingTime =0;
+                    tfPanel.model.setProperty(i,"completed",true)
+                    tfPanel.model.setProperty(i, "rates",root.rates);
+                }
                 tfPanel.model.setProperty(i, "remainingTime", remainingTime)
                 break;
 
@@ -81,13 +98,7 @@ MainWindowPage {
     SoundEffect {
             id: periodChangeSound
             source: Qt.resolvedUrl("qrc:/sounds/ring.wav")
-            Component.onCompleted: console.log("s",status)
         }
-//    KeyboardInterceptor
-//    {
-//       id:watcher
-//       onEventProduced:(e)=> {console.log(e);sp.produceSound(e)}
-//    }
     TypeWriterSP
     {
         id: sp
@@ -97,9 +108,6 @@ MainWindowPage {
         TabButton {
             text: qsTr("Time Focus")
         }
-//        TabButton {
-//            text: qsTr("Statistics")
-//        }
     }
     StackLayout {
         id: stack
@@ -117,11 +125,13 @@ MainWindowPage {
                 Button {
                     id:acceptBtn
                     text: "Accept"
+                    focus:true
                     onClicked: root.state = "started"
                 }
                 Button {
                     id:stopBtn
                     text: "Stop"
+                    enabled: false
                     onClicked: root.state = "notStarted"
                 }
             }
@@ -131,22 +141,27 @@ MainWindowPage {
    TypingAnalyzer
    {
        id:analyzer
-       // onWpmUpdated: {
-       //     statistics.pushWpm(wpm,new Date)
-       // }
-
+       onRateChanged:{ root.rates.push(rate)}
    }
-   Dialog
+   Window
    {
        id:statisticsDial
+       property alias st:st
        width:400
-       height:300
-       analyzer.onWpmChanged: pushWpm(analyzer.wpm)
+       height:500
+       ColumnLayout{
+           anchors.fill: parent
        WpmStatistics
        {
+           Layout.fillHeight: true
+           Layout.fillWidth: true
            id: st
-           anchors.fill: parent
-           wordCount: analyzer.wordCount
+       }
+       Button{
+           text: qsTr("Awesome!")
+           focus: true
+           onClicked: statisticsDial.close();
+       }
        }
    }
 }

@@ -12,14 +12,14 @@ struct TimeFocusData
 {
     Q_GADGET
 public:
-    enum Type
+    enum PeriodType
     {
-        BreakTime,
-        WorkTime,
-    }; Q_ENUM(Type)
+        Break,
+        Work
+    }; Q_ENUM(PeriodType)
     QTime time;
     QString timeStr;
-    Type type;
+    PeriodType type;
 };
 class TimeFocusModel : public QAbstractListModel
 {

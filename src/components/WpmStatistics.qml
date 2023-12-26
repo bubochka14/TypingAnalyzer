@@ -2,37 +2,50 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls 6.2
 import QtQuick.Layouts
+import KeyboardAnalyzer
+
 ColumnLayout {
     id: layout
-    property int wordCount : 0
-    property int wpmSum: 0
+    property list<typingRate> rates
     property alias chart: chart
-    function clear()
+    onRatesChanged:
     {
-        wpmSum = 0;
-        chart.lineSeries.clear();
-    }
+        chart.lineSeries.clear()
+        for(var i=0; i< rates.length; i++)
+           {console.log(rates[i].time, rates[i].cpm); chart.lineSeries.append(rates[i].time, rates[i].cpm)}
+        chart.xAxis.min = new Date(rates[0].time);
+        chart.xAxis.max = new Date(rates[rates.length-1].time);
+        totalWordsLbl.text= qsTr("Total words: ") + rates[rates.length - 1].wordCount;
+        avgWpmLbl.text= qsTr("Average WPM: ") + rates[rates.length - 1].avgWpm;
+        totalCharsLbl.text= qsTr("Total characters: ") + rates[rates.length - 1].charCount;
+        avgCpmLbl.text= qsTr("Average CPM: ") + rates[rates.length - 1].avgCpm;
 
-    function pushWpm(wpm, time)
-    {
-        chart.lineSeries.append(time,wpm);
-        wpmSum+= wpm;
     }
-
-    WPMChart
-    {
+    WPMChart {
         id: chart
         Layout.fillHeight: true
         Layout.fillWidth: true
     }
-    Label
-    {
-        id: totalWordsLbl
-        text: qsTr("Total words: ")+wordCount;
-    }
-    Label
-    {
-        id: avgWpm
-        text: qsTr("Average WPM: ") + (chart.lineSeries.count===0 ? "0": wpmSum/chart.lineSeries.count);
+    Row {
+        Column {
+            Label {
+                id: totalWordsLbl
+                text: qsTr("Total words: ") + rates[rates.length - 1].wordCount
+            }
+            Label {
+                id: avgWpmLbl
+                text: qsTr("Average WPM: ") + rates[rates.length - 1].avgWpm
+            }
+            Column {
+                Label {
+                    id: totalCharsLbl
+                    text: qsTr("Total characters: ") + rates[rates.length - 1].charCount
+                }
+                Label {
+                    id: avgCpmLbl
+                    text: qsTr("Average CPM: ") + rates[rates.length - 1].avgCpm
+                }
+            }
+        }
     }
 }

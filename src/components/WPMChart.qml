@@ -4,6 +4,8 @@ import QtCharts
 ChartView {
    id: chartViewWPM
    property alias lineSeries: lsWPM
+   property alias yAxis: axisyWPM
+   property alias xAxis: axisxTime
    title: "WPM Statistics"
    titleFont.bold: true
    titleFont.pointSize: 12
@@ -26,7 +28,6 @@ ChartView {
      id: axisxTime
      gridVisible: true
      format: "hh:mm"
-     max: new Date(new Date().getTime() + 10000)
      tickCount: 5
      titleText: "Time"
      titleFont.bold: true
@@ -34,17 +35,17 @@ ChartView {
      titleFont.pointSize: 10
    }
 
-   LineSeries {
+   SplineSeries {
      id: lsWPM
-     onPointAdded: {
+     onPointAdded :(index)=> {
          if(count<=1)
              axisxTime.min = new Date()
          var point = lsWPM.at(index);
          if(point.x>=axisxTime.max)
-            {axisxTime.max = new Date(axisxTime.max.getTime()+ 100000)}
+            {axisxTime.max = new Date(point.x+1000)}
 
          if(point.y>=axisyWPM.max)
-            axisyWPM.max = axisyWPM.max+ 50
+            axisyWPM.max = point.y + 10
      }
      name: "WPM Statistics"
      axisX: axisxTime

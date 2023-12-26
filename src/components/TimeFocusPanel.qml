@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls 6.2
 import QtQuick.Layouts
+import KeyboardAnalyzer
 
 Item {
     id: root
@@ -32,13 +33,16 @@ Item {
                               "type": "work",
                               "duration": workMs,
                               "remainingTime": workMs,
-                              "completed": false
+                              "completed": false,
+                              "rates": []
+
                           })
             lModel.append({
                               "type": "break",
                               "duration": breakMs,
                               "remainingTime": breakMs,
-                              "completed": false
+                              "completed": false,
+                              "rates": []
                           })
         }
     }
@@ -81,9 +85,9 @@ Item {
                 property var minuts: text[3] + text[4]
                 property var hours: text[0]
 
-                inputMask: "9\\h 00m"
-                text: "1h 00m"
-                onTextChanged: root.apply()
+                inputMask: "9\\h 99m"
+                text: "0h 01m"
+                onTextChanged: { minuts = text[3] + text[4] ; hours =text[0]; root.apply()}
             }
         }
         Row {
@@ -99,8 +103,8 @@ Item {
                 property var minuts: text[3] + text[4]
                 property var hours: text[0]
                 inputMask: "9\\h 99m"
-                text: "0h 15m"
-                onTextChanged: root.apply()
+                text: "0h 01m"
+                onTextChanged: { minuts = text[3] + text[4] ; hours =text[0]; root.apply()}
             }
         }
         GridView {
@@ -109,12 +113,10 @@ Item {
             Layout.fillWidth: true
             z: -1
             cellHeight: 150
-            cellWidth: 150
+            cellWidth: 140
             model: lModel
-            delegate: ColumnLayout {
+            delegate: Column {
                 id: delegate
-                width: 150
-                height: 100
                 Image {
                     sourceSize.height: 100
                     sourceSize.width: 100
@@ -126,7 +128,7 @@ Item {
                         else if (type === "work")
                             source: Qt.resolvedUrl("pics/typewriter")
                     }
-                    Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+                    anchors.horizontalCenter: parent.horizontalCenter
                 }
                 Text {
                     text: {
@@ -135,7 +137,7 @@ Item {
                         else
                             text : convert.msToStr(remainingTime)
                     } //displays the number of seconds if their number is non-decimal of 60
-                    Layout.alignment: Qt.AlignHCenter
+                    anchors.horizontalCenter: parent.horizontalCenter
                 }
             }
         }

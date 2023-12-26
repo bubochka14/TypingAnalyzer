@@ -27,13 +27,13 @@ set (CPP_SOURCES
 	"Applicationsettings.cpp"
 )
 add_executable(KeyboardAnalyzer "main.cpp" "main.qrc")
-if(MSVC)
-    target_link_options(KeyboardAnalyzer
-        PUBLIC
-        $<$<CONFIG:Debug>:/subsystem:CONSOLE>
-        $<$<CONFIG:Release>:/subsystem:WINDOWS>
-    )
-endif()
+#if(MSVC)
+ #   target_link_options(KeyboardAnalyzer
+ #       PUBLIC
+        #$<$<CONFIG:Debug>:/subsystem:CONSOLE>
+        #$<$<CONFIG:Release>:/subsystem:WINDOWS;/ENTRY:mainCRTStartup>
+    #)
+#endif()
 
 
 QT_ADD_QML_MODULE(KeyboardAnalyzer 
@@ -42,19 +42,19 @@ QT_ADD_QML_MODULE(KeyboardAnalyzer
 	QML_FILES ${QML_SOURCES}
 )
 if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET KeyboardAnalyzer PROPERTY CXX_STANDARD 20)
+#  set_property(TARGET KeyboardAnalyzer PROPERTY CXX_STANDARD 20)
 endif()
 
 target_compile_definitions(KeyboardAnalyzer PRIVATE APP_NAME="KeyboardAnalyzer" ORG_NAME="ORG")
 target_link_libraries(KeyboardAnalyzer PRIVATE 
 	Qt6::Core 
 	Qt6::Qml 
-        Qt6::Gui
+    Qt6::Gui
 	Qt6::Charts
 	Qt6::Multimedia
 	Qt6::Quick 
 	KeyboardInterceptor
-        components
+    components
 )
 
 

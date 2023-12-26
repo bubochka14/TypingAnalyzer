@@ -4,6 +4,7 @@
 #include "KeyboardInterceptor.h"
 
 #include <QObjectBindableProperty>
+//also a char counter
 class WordCounter : public QObject
 {
 	Q_OBJECT;
