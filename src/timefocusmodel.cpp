@@ -1,7 +1,7 @@
 #include "timefocusmodel.h"
 Q_LOGGING_CATEGORY(LC_TimeFocusModel, "TimeFocusModel");
 
-QHash<int, QByteArray> TimeFocusModel::_roles = { {Time,"time"},{TimeStr,"timeStr"},{FocusType,"type"}};
+QHash<int, QByteArray> TimeFocusModel::_roles = { {Time,"time"},{FocusType,"type"}};
 TimeFocusModel::TimeFocusModel(QObject *parent)
     : QAbstractListModel{parent}
 {
@@ -15,33 +15,10 @@ bool TimeFocusModel::setData(const QModelIndex& index, const QVariant& value, in
     {
     case Time:
          _data[index.row()].time = value.value<QTime>();
-         _data[index.row()].timeStr = value.value<QTime>().toString("HH:mm:ss");
          
          return true;
-    case TimeStr:
-    {
-        QString timeStr = value.value<QString>();
-
-        auto list = timeStr.split(u':', Qt::SkipEmptyParts);
-        if (list.size() != 3)
-        {
-            qCWarning(LC_TimeFocusModel) << "Incorrect time format received: " << timeStr;
-            return false;
-        }
-        bool ok; QTime temp = QTime(list.at(0).toInt(&ok), list.at(1).toInt(&ok), list.at(2).toInt(&ok));
-        if (!ok)
-        {
-            qCWarning(LC_TimeFocusModel) << "Incorrect time received: " << timeStr;
-            return false;
-        }
-        _data[index.row()].timeStr = timeStr;
-        _data[index.row()].time = temp;
-        return true;
-
-    }
-
     case FocusType:
-        _data[index.row()].type = value.value<TimeFocusData::Type>();
+        _data[index.row()].type = value.value<TimeFocusData::PeriodType>();
         return true;
 
     default:
@@ -60,18 +37,11 @@ QVariant TimeFocusModel::data(const QModelIndex& index, int role) const
         case Time:
             return _data.at(index.row()).time;
             break;
-        case TimeStr:
-            return _data.at(index.row()).timeStr;
-            break;
         case FocusType:
             return _data.at(index.row()).type;
             break;
         default:
-            break;
-        }
-        if (role < Qt::UserRole)
-        {
-
+            return QAbstractListModel::data(index, role);
         }
     }
     return QVariant();

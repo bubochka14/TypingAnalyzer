@@ -18,7 +18,6 @@ public:
         Work
     }; Q_ENUM(PeriodType)
     QTime time;
-    QString timeStr;
     PeriodType type;
 };
 class TimeFocusModel : public QAbstractListModel
@@ -38,7 +37,6 @@ private:
     enum Roles
     {
         Time = Qt::UserRole,
-        TimeStr,
         FocusType
     };
     QVector<TimeFocusData> _data;
