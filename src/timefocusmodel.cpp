@@ -7,6 +7,19 @@ TimeFocusModel::TimeFocusModel(QObject *parent)
 {
 
 }
+TimeFocusModel* TimeFocusModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine)
+{
+    return instance();
+}
+TimeFocusModel* TimeFocusModel::instance()
+{
+    if (!_p_inst)
+    {
+        _p_inst = new TimeFocusModel;
+        std::atexit([]() {delete _p_inst; });
+    }
+    return _p_inst;
+}
 bool TimeFocusModel::setData(const QModelIndex& index, const QVariant& value, int role ) 
 {
     if (index.isValid() || index.row() < rowCount() || index.row() >= 0)

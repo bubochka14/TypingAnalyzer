@@ -29,13 +29,16 @@ class TimeFocusModel : public QAbstractListModel
     QML_ELEMENT
     QML_SINGLETON
 public:
-    explicit TimeFocusModel(QObject *parent = nullptr);
+    static TimeFocusModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
+    static TimeFocusModel* instance();
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;	
     bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
+protected:
+    explicit TimeFocusModel(QObject* parent = nullptr);
 private:
     enum Roles
     {
@@ -44,6 +47,7 @@ private:
         Completed,
         Type
     };
+    inline static TimeFocusModel* _p_inst = nullptr;
     QVector<TimeFocusData> _data;
     static QHash<int, QByteArray> _roles;
 };
