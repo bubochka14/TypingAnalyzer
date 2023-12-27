@@ -8,6 +8,7 @@
 #include <qqmlengine.h>
 #include <qvariant.h>
 Q_DECLARE_LOGGING_CATEGORY(LC_TimeFocusModel);
+// Duration and RemainingTime is msec counter
 struct TimeFocusData
 {
     Q_GADGET
@@ -17,7 +18,9 @@ public:
         Break,
         Work
     }; Q_ENUM(PeriodType)
-    QTime time;
+    qint64 duration;
+    qint64 remainingTime;
+    bool completed;
     PeriodType type;
 };
 class TimeFocusModel : public QAbstractListModel
@@ -36,8 +39,10 @@ public:
 private:
     enum Roles
     {
-        Time = Qt::UserRole,
-        FocusType
+        Duration = Qt::UserRole,
+        RemainingTime,
+        Completed,
+        Type
     };
     QVector<TimeFocusData> _data;
     static QHash<int, QByteArray> _roles;

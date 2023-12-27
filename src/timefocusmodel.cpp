@@ -1,7 +1,7 @@
 #include "timefocusmodel.h"
 Q_LOGGING_CATEGORY(LC_TimeFocusModel, "TimeFocusModel");
 
-QHash<int, QByteArray> TimeFocusModel::_roles = { {Time,"time"},{FocusType,"type"}};
+QHash<int, QByteArray> TimeFocusModel::_roles = { {Duration,"duration"},{Type,"type"}, {RemainingTime, "remainingTime"},{Completed,"completed"} };
 TimeFocusModel::TimeFocusModel(QObject *parent)
     : QAbstractListModel{parent}
 {
@@ -13,17 +13,27 @@ bool TimeFocusModel::setData(const QModelIndex& index, const QVariant& value, in
     {
     switch (role)
     {
-    case Time:
-         _data[index.row()].time = value.value<QTime>();
-         
-         return true;
-    case FocusType:
+    case Duration:
+        if (!value.canConvert<quint64>())
+            return false;
+         _data[index.row()].duration = value.value<quint64>();
+         break;
+    case RemainingTime:
+        if (!value.canConvert<quint64>())
+            return false;
+        _data[index.row()].remainingTime = value.value<quint64>();
+        break;
+    case Completed:
+        if (!value.canConvert<bool>())
+            return false;
+        _data[index.row()].remainingTime = value.value<bool>();
+        break;
+    case Type:
+        if (!value.canConvert<TimeFocusData::PeriodType>())
+            return false;
         _data[index.row()].type = value.value<TimeFocusData::PeriodType>();
-        return true;
-
-    default:
-        return QAbstractListModel::setData(index,value, role);
-
+        break;
+    return true;
     }
     }
     return false;
@@ -34,14 +44,14 @@ QVariant TimeFocusModel::data(const QModelIndex& index, int role) const
     {
         switch (role)
         {
-        case Time:
-            return _data.at(index.row()).time;
-            break;
-        case FocusType:
+        case Duration:
+            return _data.at(index.row()).duration;
+        case RemainingTime:
+            return _data.at(index.row()).remainingTime;
+        case Completed:
+            return _data.at(index.row()).completed;
+        case Type:
             return _data.at(index.row()).type;
-            break;
-        default:
-            return QAbstractListModel::data(index, role);
         }
     }
     return QVariant();
