@@ -21,7 +21,7 @@ public:
     qint64 duration;
     qint64 remainingTime;
     bool completed;
-    PeriodType type;
+    QString type;
 };
 class TimeFocusModel : public QAbstractListModel
 {
@@ -29,8 +29,16 @@ class TimeFocusModel : public QAbstractListModel
     QML_ELEMENT
     QML_SINGLETON
 public:
+    enum Roles
+    {
+        Duration = Qt::UserRole,
+        RemainingTime,
+        Completed,
+        Type
+    }; Q_ENUM(Roles)
     static TimeFocusModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);
     static TimeFocusModel* instance();
+    Q_INVOKABLE bool clear();
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
     QHash<int, QByteArray> roleNames() const override;
@@ -40,13 +48,7 @@ public:
 protected:
     explicit TimeFocusModel(QObject* parent = nullptr);
 private:
-    enum Roles
-    {
-        Duration = Qt::UserRole,
-        RemainingTime,
-        Completed,
-        Type
-    };
+
     inline static TimeFocusModel* _p_inst = nullptr;
     QVector<TimeFocusData> _data;
     static QHash<int, QByteArray> _roles;

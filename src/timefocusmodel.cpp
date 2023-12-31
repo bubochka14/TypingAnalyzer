@@ -22,7 +22,7 @@ TimeFocusModel* TimeFocusModel::instance()
 }
 bool TimeFocusModel::setData(const QModelIndex& index, const QVariant& value, int role ) 
 {
-    if (index.isValid() || index.row() < rowCount() || index.row() >= 0)
+    if (index.isValid() && index.row() < rowCount() && index.row() >= 0)
     {
     switch (role)
     {
@@ -39,21 +39,25 @@ bool TimeFocusModel::setData(const QModelIndex& index, const QVariant& value, in
     case Completed:
         if (!value.canConvert<bool>())
             return false;
-        _data[index.row()].remainingTime = value.value<bool>();
+        _data[index.row()].completed = value.value<bool>();
         break;
     case Type:
-        if (!value.canConvert<TimeFocusData::PeriodType>())
+        if (!value.canConvert<QString>())
             return false;
-        _data[index.row()].type = value.value<TimeFocusData::PeriodType>();
+        _data[index.row()].type = value.value<QString>();
         break;
-    return true;
     }
+    return true;
     }
     return false;
 }
+bool TimeFocusModel::clear()
+{
+   return removeRows(0, rowCount());
+}
 QVariant TimeFocusModel::data(const QModelIndex& index, int role) const 
 {
-    if (index.isValid() || index.row() < _data.size() || index.row() >= 0)
+    if (index.isValid() && index.row() < _data.size() && index.row() >= 0)
     {
         switch (role)
         {
