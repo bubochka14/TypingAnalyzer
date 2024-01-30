@@ -39,8 +39,7 @@ MainWindowPage {
             StateChangeScript {name: "breakScript";script:{
                     analyzer.stop();
                     sp.enabled = false;
-                    statisticsDial.st.rates = root.rates
-                   statisticsDial.show();
+                    stDialog.show(root.rates)
                     periodChangeSound.play();
 
                 }
@@ -55,7 +54,7 @@ MainWindowPage {
                     analyzer.reset();
                     analyzer.start();
                     root.rates = [];
-                    statisticsDial.close();
+                    stDialog.close();
                     sp.enabled = true;
                     periodChangeSound.play()}
             }
@@ -70,26 +69,27 @@ MainWindowPage {
     ]
     Timer{
         id: updateTimer
+        property var currentIndex
         interval: updateInterval
         repeat: true
         onTriggered: {
-            if (tfPanel.model.count === 0)
-                root.finish();
-            for (var i =0;tfPanel.model.get(i);i++) {
-                var cell = tfPanel.model.get(i)
-                var remainingTime = cell.remainingTime
-                if(remainingTime <=0 || cell.completed)
-                    continue;//if cell already completed
-                if (cell.type !== root.state)
-                    root.state = cell.type;
-                remainingTime -= interval
-                if(remainingTime<=0)
+            if (TimeFocusModel.rowCount === 0)
+                root.state = "notStarted"
+
+            for (var i =0;;i++) {
+                var idx = TimeFocusModel.index(i,0);
+                var remTime = TimeFocusModel.data(idx, TimeFocusModel.RemainingTime);
+                if(remTime <=0 || TimeFocusModel.data(idx,TimeFocusModel.Completed))
+                    continue; //if cell already completed
+                 if (TimeFocusModel.data(idx, TimeFocusModel.Type) !== root.state)
+                    root.state = TimeFocusModel.data(idx, TimeFocusModel.Type);
+                remTime -= interval
+                if(remTime<=0)
                 {
                     remainingTime =0;
-                    tfPanel.model.setProperty(i,"completed",true)
-                    tfPanel.model.setProperty(i, "rates",root.rates);
+                    TimeFocusModel.setData(idx,true,FocusModel.Completed)
                 }
-                tfPanel.model.setProperty(i, "remainingTime", remainingTime)
+                TimeFocusModel.setData(idx,remTime, TimeFocusModel.RemainingTime)
                 break;
 
             }
@@ -143,25 +143,8 @@ MainWindowPage {
        id:analyzer
        onRateChanged:{ root.rates.push(rate)}
    }
-   Window
+   StatisticsDialog
    {
-       id:statisticsDial
-       property alias st:st
-       width:400
-       height:500
-       ColumnLayout{
-           anchors.fill: parent
-       WpmStatistics
-       {
-           Layout.fillHeight: true
-           Layout.fillWidth: true
-           id: st
-       }
-       Button{
-           text: qsTr("Awesome!")
-           focus: true
-           onClicked: statisticsDial.close();
-       }
-       }
+       id: stDialog
    }
 }

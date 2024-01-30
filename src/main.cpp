@@ -4,6 +4,7 @@
 #include <QApplication>
 #include <qkeysequence.h>
 #include "KeyboardInterceptor.h"
+#include "applicationsettings.h"
 #include "typewritersp.h"
 #include "qqmlapplicationengine.h"
 #include <qdir>
@@ -12,12 +13,12 @@ int main(int argc, char**argv)
 {
 	QApplication app(argc, argv);
 	app.setQuitOnLastWindowClosed(false);
-
-	//KeyboardInterceptor w;
-	TypeWriterSP t;
-	//QObject::connect(&w, &KeyboardInterceptor::eventProduced, [&](KeyEvent e) {qDebug() << e.key << e.modifiers << e.text; t.produceSound(e); });
-
+	ApplicationSettings sett;
+	qDebug() << sett.KBSoundProducerName();
+	sett.setKBSoundProducerName("a");
+	qDebug() << sett.KBSoundProducerName();
     QQmlApplicationEngine e(":/components/Main.qml");
+	TypeWriterSP s;
 	int exit = app.exec();
 	return exit;
 }

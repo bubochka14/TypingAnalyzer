@@ -1,11 +1,11 @@
 #pragma once
-#include "AKBSoundPlayer.h"
+#include <soundinterfaces.h>
 #include <QSoundEffect>
 #include <QFile>
 #include <qrandom.h>
 #include <QDebug>
 #include <qqmlengine.h>
-class TypeWriterSP :public AKBSoundPlayer
+class TypeWriterSP : public QObject, public IKBSoundProducer
 {
 	QML_ELEMENT;
 	Q_OBJECT;
@@ -15,7 +15,7 @@ class TypeWriterSP :public AKBSoundPlayer
 
 public:
 	explicit TypeWriterSP(QObject* parent= nullptr);
-	Q_INVOKABLE QList<Qt::Key> availableKeys() const override;
-public slots:
+    QList<Qt::Key> availableKeys() const override;
 	bool produceSound(const KeyEvent&) override;
+
 };

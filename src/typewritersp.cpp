@@ -1,6 +1,6 @@
 #include "typewritersp.h"
 TypeWriterSP::TypeWriterSP(QObject* parent)
-	:AKBSoundPlayer(parent)
+	:QObject(parent)
 	,_enterSound(new QSoundEffect)
 	,_spaceSound(new QSoundEffect)
 {

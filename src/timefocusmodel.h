@@ -7,21 +7,19 @@
 #include <KeyboardInterceptor.h>
 #include <qqmlengine.h>
 #include <qvariant.h>
+#include "typinganalyzer.h"
 Q_DECLARE_LOGGING_CATEGORY(LC_TimeFocusModel);
 // Duration and RemainingTime is msec counter
 struct TimeFocusData
 {
     Q_GADGET
 public:
-    enum PeriodType
-    {
-        Break,
-        Work
-    }; Q_ENUM(PeriodType)
     qint64 duration;
     qint64 remainingTime;
     bool completed;
     QString type;
+    RatesList rates;
+
 };
 class TimeFocusModel : public QAbstractListModel
 {
@@ -34,6 +32,7 @@ public:
         Duration = Qt::UserRole,
         RemainingTime,
         Completed,
+        Rates,
         Type
     }; Q_ENUM(Roles)
     static TimeFocusModel* create(QQmlEngine* qmlEngine, QJSEngine* jsEngine);

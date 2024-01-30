@@ -6,7 +6,6 @@ import KeyboardAnalyzer
 
 Item {
     id: root
-    property alias model: lModel
     property bool inputFieldsVisible: true
     Item {
         id: convert
@@ -21,35 +20,28 @@ Item {
         }
     }
     function apply() {
-        lModel.clear()
-        console.log(workDurationTf.hours, workDurationTf.minuts)
+        TimeFocusModel.clear();
+        TimeFocusModel.insertRows(0,countTf.text*2);
         var workMs = convert.toMiliseconds(workDurationTf.hours,
                                            workDurationTf.minuts)
         var breakMs = convert.toMiliseconds(breakDurationTf.hours,
                                             breakDurationTf.minuts)
 
-        for (var i = 0; i < countTf.text; i++) {
-            lModel.append({
-                              "type": "work",
-                              "duration": workMs,
-                              "remainingTime": workMs,
-                              "completed": false,
-                              "rates": []
+        for (var i = 0; i < countTf.text*2; i+=2) {
+            TimeFocusModel.setData(TimeFocusModel.index(i,0),workMs,TimeFocusModel.Duration);
+            TimeFocusModel.setData(TimeFocusModel.index(i,0),workMs,TimeFocusModel.RemainingTime);
+            TimeFocusModel.setData(TimeFocusModel.index(i,0),0,TimeFocusModel.Completed);
+            TimeFocusModel.setData(TimeFocusModel.index(i,0),"work",TimeFocusModel.Type);
 
-                          })
-            lModel.append({
-                              "type": "break",
-                              "duration": breakMs,
-                              "remainingTime": breakMs,
-                              "completed": false,
-                              "rates": []
-                          })
+            TimeFocusModel.setData(TimeFocusModel.index(i+1,0),breakMs,TimeFocusModel.Duration);
+            TimeFocusModel.setData(TimeFocusModel.index(i+1,0),breakMs,TimeFocusModel.RemainingTime);
+            TimeFocusModel.setData(TimeFocusModel.index(i+1,0),0,TimeFocusModel.Completed);
+            TimeFocusModel.setData(TimeFocusModel.index(i+1,0),"break",TimeFocusModel.Type);
+
+
         }
     }
     Component.onCompleted: root.apply()
-    ListModel {
-        id: lModel
-    }
 
     ColumnLayout {
         id: mainColumn
@@ -114,12 +106,13 @@ Item {
             z: -1
             cellHeight: 150
             cellWidth: 140
-            model: lModel
+            model: TimeFocusModel
             delegate: Column {
                 id: delegate
                 Image {
                     sourceSize.height: 100
                     sourceSize.width: 100
+                    Component.onCompleted: console.log(remainingTime)
                     source: {
                         if (completed)
                             source: Qt.resolvedUrl("pics/completed")
@@ -129,6 +122,13 @@ Item {
                             source: Qt.resolvedUrl("pics/typewriter")
                     }
                     anchors.horizontalCenter: parent.horizontalCenter
+                    MouseArea
+                    {
+                        enabled: (rates.size && completed) ? true:false
+                        anchors.fill: parent
+                        cursorShape: enabled? Qt.PointingHandCursor : Qt.ArrowCursor
+                        onClicked: statsDial.show(rates)
+                    }
                 }
                 Text {
                     text: {
@@ -141,5 +141,9 @@ Item {
                 }
             }
         }
+    }
+    StatisticsDialog
+    {
+        id: statsDial
     }
 }

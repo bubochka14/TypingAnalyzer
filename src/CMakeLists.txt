@@ -13,20 +13,25 @@ set (CPP_SOURCES
 	"pressingmodel.h" 
 	"wordcounter.h" 
 	"wordcounter.cpp" 
-	"AKBSoundPlayer.h" 
-	"AKBSoundPlayer.cpp" 
-	"EmptyKBSoundPlayer.h" 
-	"emptykbsoundplayer.cpp" 
+	"emptykbsoundproducer.h" 
+	"emptykbsoundproducer.cpp"
+	"emptyperiodsoundproducer.h"
+	"emptyperiodsoundproducer.cpp"
 	"TypingAnalyzer.h" 
 	"TypingAnalyzer.cpp" 
 	"typewriterSP.h" 
 	"typewritersp.cpp"
 	"timefocusmodel.cpp"
-     "timefocusmodel.h"
-	"Applicationsettings.h"
-	"Applicationsettings.cpp"
+    "timefocusmodel.h"
+	"applicationsettings.h"
+	"applicationsettings.cpp"
+	"soundinterfaces.h"
+	"soundproducerholder.h" 
+	"soundproducerholder.cpp"
+	 "app.h" "app.cpp" "aconfigloader.h"
+	 "aconfigloader.cpp"
 )
-add_executable(KeyboardAnalyzer "main.cpp" "main.qrc")
+add_executable(KeyboardAnalyzer "main.cpp" "main.qrc" "localconfigloader.h" "localconfigloader.cpp" "soundconfigbuilder.h" "configprototype.h")
 #if(MSVC)
  #   target_link_options(KeyboardAnalyzer
  #       PUBLIC

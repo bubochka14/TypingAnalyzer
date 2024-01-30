@@ -46,7 +46,13 @@ bool TimeFocusModel::setData(const QModelIndex& index, const QVariant& value, in
             return false;
         _data[index.row()].type = value.value<QString>();
         break;
+    case Rates:
+        if (!value.canConvert<RatesList>())
+            return false;
+        _data[index.row()].rates = value.value<RatesList>();
+        break;
     }
+    emit dataChanged(index, index);
     return true;
     }
     return false;
@@ -69,6 +75,8 @@ QVariant TimeFocusModel::data(const QModelIndex& index, int role) const
             return _data.at(index.row()).completed;
         case Type:
             return _data.at(index.row()).type;
+        case Rates:
+            return QVariant::fromValue(_data.at(index.row()).rates);
         }
     }
     return QVariant();
