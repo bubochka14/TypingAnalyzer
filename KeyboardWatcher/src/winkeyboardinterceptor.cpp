@@ -13,8 +13,6 @@ typedef std::basic_string<TCHAR> tstring;
 KeyEvent WinKeyboardInterceptor::converToKeyEvent(KeyEvent::Type type, uint code, std::wstring text, bool isRepeating) {
 	QString keyText = QString::fromStdWString(text);
 	QKeySequence sq(keyText);
-//	if (sq.count() < 1)
-//		return;
 	KeyEvent ev = {type, sq[0].key(), sq[0].keyboardModifiers(), keyText, isRepeating };
 	return ev;
 }
@@ -48,31 +46,25 @@ void WinKeyboardInterceptor::handleKey(int ccode, WPARAM wParam, LPARAM lParam)
 	KBDLLHOOKSTRUCT* pLLHKey = (KBDLLHOOKSTRUCT*)lParam;
 	DWORD VKey = pLLHKey->vkCode;
 	static WCHAR name[32] = L"";
-	static BYTE kbState[256] = { 0 };
+	//хранит прошлое состояние кнопки по виртуальному ключу 0 - была нажата, 1 - отпущена
+	static BYTE lastKbState[256] = { 0 };
 	static WCHAR Text[64] = { 0 };
 	DWORD idThread;
-	GetKeyState(VK_SHIFT);
-	GetKeyState(VK_MENU);
-	GetKeyboardState(kbState);
-
-	idThread = GetWindowThreadProcessId(GetForegroundWindow(), nullptr);
-	long code = MapVirtualKeyExW(VKey, MAPVK_VK_TO_VSC,
-		GetKeyboardLayout(idThread)) << 16;
-	size_t count = ToUnicodeEx(VKey, MapVirtualKey(VKey, MAPVK_VK_TO_VSC), kbState, name,
-		32, 0, GetKeyboardLayout(idThread));
-	//qDebug() << count << "bytes" <<QString::fromWCharArray(name,count) << "char" << pLLHKey->vkCode << "vkcode" << pLLHKey->scanCode << "scan";
 	GetKeyNameText(pLLHKey->scanCode << 16, Text, 64);
 	switch (wParam)
 	{
 	case WM_KEYDOWN:
-		emit keyInteracted(converToKeyEvent(KeyEvent::Press,pLLHKey->vkCode, Text, false));
+		emit keyInteracted(converToKeyEvent(KeyEvent::Press, pLLHKey->vkCode, Text, lastKbState[VKey]));
 		break;
 	case WM_KEYUP:
-		emit keyInteracted(converToKeyEvent(KeyEvent::Release,pLLHKey->vkCode, Text, false));
+		emit keyInteracted(converToKeyEvent(KeyEvent::Release, pLLHKey->vkCode, Text, false));
 		break;
 	default:
 		break;
-	}	
+	}
+	GetKeyState(VK_SHIFT);
+	GetKeyState(VK_MENU);
+	lastKbState[VKey] = !(wParam&1);
 }
 
 LRESULT CALLBACK LLKBHookProc(int code, WPARAM wParam, LPARAM lParam) {
@@ -95,7 +87,6 @@ void  WinKeyboardInterceptor::uninstallHook()
 {
 	UnhookWindowsHookEx(_hhk);
 }
-
 WinKeyboardInterceptor::~WinKeyboardInterceptor()
 {
 	uninstallHook();

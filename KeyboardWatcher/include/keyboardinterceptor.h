@@ -20,4 +20,4 @@ public slots:
 	 void stopWatching();
 private:
 	QScopedPointer<KeyboardInterceptorPrivate> _d_p;
-};	
+};	 
