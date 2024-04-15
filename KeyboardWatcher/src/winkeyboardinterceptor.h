@@ -22,7 +22,7 @@ public:
 	static WinKeyboardInterceptor* instance();
 	~WinKeyboardInterceptor() override;
 protected:
-	KeyEvent converToKeyEvent(KeyEvent::Type,uint code, std::wstring text, bool isRepeating);
+	KeyEvent converToKeyEvent(KeyEvent::InteractionType,uint code, std::wstring text, bool isRepeating);
 private:
 	friend LRESULT CALLBACK LLKBHookProc(int code, WPARAM wParam, LPARAM lParam);
 	void handleKey(int code, WPARAM wParam, LPARAM lParam);

@@ -10,7 +10,7 @@ WinKeyboardInterceptor* WinKeyboardInterceptor::instance()
 	return _pInst;
 }
 typedef std::basic_string<TCHAR> tstring;
-KeyEvent WinKeyboardInterceptor::converToKeyEvent(KeyEvent::Type type, uint code, std::wstring text, bool isRepeating) {
+KeyEvent WinKeyboardInterceptor::converToKeyEvent(KeyEvent::InteractionType type, uint code, std::wstring text, bool isRepeating) {
 	QString keyText = QString::fromStdWString(text);
 	QKeySequence sq(keyText);
 	KeyEvent ev = {type, sq[0].key(), sq[0].keyboardModifiers(), keyText, isRepeating };
