@@ -4,26 +4,24 @@ import QtQuick.Controls 6.2
 import QtCharts
 import Qt.labs.platform
 
-MainWindow
-{
-	id:mainWindow
-	width:480
-	height: 640
-	visible: true
-	SystemTrayIcon {
+MainWindow {
+    id: mainWindow
+    width: 480
+    height: 640
     visible: true
-    icon.source: Qt.resolvedUrl("icons/chart.svg");
-    menu: Menu {
-         MenuItem {
-             text: qsTr("Quit")
-             onTriggered: Qt.quit()
-         }
+    SystemTrayIcon {
+        visible: true
+        icon.source: Qt.resolvedUrl("icons/chart.svg")
+        menu: Menu {
+            MenuItem {
+                text: qsTr("Quit")
+                onTriggered: Qt.quit()
+            }
+        }
+        onActivated: {
+            mainWindow.show()
+            mainWindow.raise()
+            mainWindow.requestActivate()
+        }
     }
-    onActivated: {
-        mainWindow.show()
-        mainWindow.raise()
-        mainWindow.requestActivate()
-    }
-}
-
 }

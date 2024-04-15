@@ -1,0 +1,37 @@
+#pragma once
+#include <QObject>
+#include <qapplication.h>
+#include <qqmlapplicationengine.h>
+#include "typewritersp.h"
+#include "timefocuspage.h"
+#include "qloggingcategory.h"
+#include "customkbproducer.h"
+#include "application.h"
+#include "settingspage.h"
+#include <qqmlcontext.h>
+#include "qproperty.h"
+#include "listsetting.h"
+#include "namedobject.h"
+#include "freemodepage.h"
+Q_DECLARE_LOGGING_CATEGORY(LC_APP);	
+
+class PageApplication : public Application
+{
+	Q_OBJECT;
+	QML_UNCREATABLE("");
+	QML_ELEMENT;
+	Q_PROPERTY(QList<AppPage*> pages READ pages NOTIFY pagesChanged)
+public:
+    explicit PageApplication(int argc, char** argv);
+    int exec() override;
+	void addPage(AppPage* other);
+	QList<AppPage*> pages() const;
+signals:
+	void pagesChanged();
+protected:
+	void setupSettings();
+private:
+	QApplication _qApp;
+	QList<AppPage*> _pages;
+	QQmlApplicationEngine* _engine;
+};

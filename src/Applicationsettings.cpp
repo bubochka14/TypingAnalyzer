@@ -2,7 +2,6 @@
 ApplicationSettings::ApplicationSettings(const QString& appName, const QString& orgName)
 	:QSettings(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation)+"\config.ini", QSettings::IniFormat)
 {
-	qDebug() << QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "\config.ini";
 }
 QString ApplicationSettings::language() const
 {
@@ -53,4 +52,16 @@ void ApplicationSettings::setPeriodSoundProducerName(const QString& other)
 		setValue("periodSoundProducerName", other);
 		emit periodSoundProducerNameChanged();
 	}
+}
+void ApplicationSettings::addSettingsContent(const QString& name, QQuickItem* content)
+{
+	_settingsContent[name] = content;
+}
+QStringList ApplicationSettings::settingsNames() const
+{
+	return _settingsContent.keys();
+}
+QQuickItem* ApplicationSettings::settingsContent(const QString& name) const
+{
+	return _settingsContent.contains(name) ? _settingsContent[name] : nullptr;
 }

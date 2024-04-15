@@ -4,147 +4,191 @@ import QtQuick.Controls 6.2
 import QtQuick.Layouts
 import KeyboardAnalyzer
 import QtMultimedia
-MainWindowPage {
+
+Page {
     id: root
-    property int updateInterval: 1000
-    property string currentPeriodType
-    property list<typingRate> rates
-    onRatesChanged:{console.log("new",rates)}
-    function start()
-    {
-        updateTimer.start();
-        TypingAnalyzer.start()
+    property alias timePanel: tfPanel
+    readonly property TimeFocusModel model: timeFocusPage.model
+    Item {
+        id: convert
+        function toMiliseconds(h = 0, m = 0, s = 0, ms = 0) {
+            return h * 3600000 + m * 60000 + s * 1000 + ms
+        }
+        function msToStr(mil) {
+            var hours = Math.floor(mil / 3600000)
+            var mins = Math.floor(mil % 3600000 / 60000)
+            var s = mil % 3600000 % 60000 / 1000
+            return hours + "h " + mins + "m " + (s ? (s + "s") : "")
+        }
     }
-    function stop()
-    {
+    Component.onCompleted: root.apply()
+    state: {
+        var state = timeFocusPage.executable.state
+        if (state == Executable.Finished || state == Executable.NotStarted)
+            return "NotStarted"
+        else
+            return "Started"
+    }
+    function apply() {
+        model.clear()
+        if(TimeFocusPanel.repeatCount==0)
+            return;
+        model.insertRows(0, timePanel.repeatCount * 2 - 1)
+        var workMs = timePanel.workDuration
+        var breakMs = timePanel.breakDuration
 
+        for (var i = 0; i < timePanel.repeatCount * 2 - 1; i += 2) {
+            model.setData(model.index(i, 0), workMs, TimeFocusModel.Duration)
+            model.setData(model.index(i, 0), workMs,
+                          TimeFocusModel.RemainingTime)
+            model.setData(model.index(i, 0), 0, TimeFocusModel.Completed)
+            model.setData(model.index(i, 0), PeriodInfo.Work,
+                          TimeFocusModel.Type)
+            if (i != timePanel.repeatCount * 2 - 1) { // skip last break
+                model.setData(model.index(i + 1, 0), breakMs,
+                              TimeFocusModel.Duration)
+                model.setData(model.index(i + 1, 0), breakMs,
+                              TimeFocusModel.RemainingTime)
+                model.setData(model.index(i + 1, 0), 0,
+                              TimeFocusModel.Completed)
+                model.setData(model.index(i + 1, 0), PeriodInfo.Break,
+                              TimeFocusModel.Type)
+            }
+        }
     }
-    name: "Time Focus Page"
-    iconSource: Qt.resolvedUrl("pics/coffee")
     padding: 20
-    //states named as TimeFocusPanel periods excluding started and nonStarted
     states: [
-        State{
-            name: "started"
-            PropertyChanges {target: tfPanel;inputFieldsVisible: false}
-            PropertyChanges {target: acceptBtn;enabled: false}
-            PropertyChanges {target: stopBtn;enabled: true}
-            StateChangeScript {name: "startScript";script: {updateTimer.start(); analyzer.start()}}
-        },
         State {
-            name: "break"
-            PropertyChanges {target: tfPanel; inputFieldsVisible: false}
-            PropertyChanges {target: acceptBtn;enabled: false}
-            PropertyChanges {target: stopBtn;enabled: true}
-            StateChangeScript {name: "breakScript";script:{
-                    analyzer.stop();
-                    sp.enabled = false;
-                    stDialog.show(root.rates)
-                    periodChangeSound.play();
+            name: "Started"
+            PropertyChanges {
+                target: tfPanel
+                inputFieldsVisible: false
+            }
+            PropertyChanges {
+                target: acceptBtn
+                enabled: false
+            }
+            PropertyChanges {
+                target: stopBtn
+                enabled: true
+            }
+        },
 
-                }
+        State {
+            name: "NotStarted"
+            PropertyChanges {
+                target: acceptBtn
+                enabled: true
+            }
+            PropertyChanges {
+                target: stopBtn
+                enabled: false
+            }
+            PropertyChanges {
+                target: tfPanel
+                inputFieldsVisible: true
             }
         },
         State {
-            name: "work"
-            PropertyChanges {target: tfPanel; inputFieldsVisible: false}
-            PropertyChanges {target: acceptBtn;enabled: false}
-            PropertyChanges {target: stopBtn;enabled: true}
-            StateChangeScript {name: "workScript";script: {
-                    analyzer.reset();
-                    analyzer.start();
-                    root.rates = [];
-                    stDialog.close();
-                    sp.enabled = true;
-                    periodChangeSound.play()}
+            name: "Finished"
+            PropertyChanges {
+                target: acceptBtn
+                enabled: true
             }
-        },
-        State {
-            name: "notStarted"
-            PropertyChanges {target: acceptBtn;enabled: true}
-            PropertyChanges {target: stopBtn;enabled: false}
-            PropertyChanges {target: tfPanel; inputFieldsVisible: true}
-            StateChangeScript {name: "notStartedScript"; script: {sp.enabled = false;updateTimer.stop(); tfPanel.apply()}}
+            PropertyChanges {
+                target: stopBtn
+                enabled: false
+            }
+            PropertyChanges {
+                target: tfPanel
+                inputFieldsVisible: true
+            }
         }
     ]
-    Timer{
-        id: updateTimer
-        property var currentIndex
-        interval: updateInterval
-        repeat: true
-        onTriggered: {
-            if (TimeFocusModel.rowCount === 0)
-                root.state = "notStarted"
-
-            for (var i =0;;i++) {
-                var idx = TimeFocusModel.index(i,0);
-                var remTime = TimeFocusModel.data(idx, TimeFocusModel.RemainingTime);
-                if(remTime <=0 || TimeFocusModel.data(idx,TimeFocusModel.Completed))
-                    continue; //if cell already completed
-                 if (TimeFocusModel.data(idx, TimeFocusModel.Type) !== root.state)
-                    root.state = TimeFocusModel.data(idx, TimeFocusModel.Type);
-                remTime -= interval
-                if(remTime<=0)
-                {
-                    remainingTime =0;
-                    TimeFocusModel.setData(idx,true,FocusModel.Completed)
-                }
-                TimeFocusModel.setData(idx,remTime, TimeFocusModel.RemainingTime)
-                break;
-
-            }
-        }
-    }
-    SoundEffect {
-            id: periodChangeSound
-            source: Qt.resolvedUrl("qrc:/sounds/ring.wav")
-        }
-    TypeWriterSP
-    {
-        id: sp
-    }
-    header: TabBar {
-        id: tabBar
-        TabButton {
-            text: qsTr("Time Focus")
-        }
-    }
-    StackLayout {
-        id: stack
+    ColumnLayout {
+        id: mainLayout
         anchors.fill: parent
-        currentIndex: tabBar.currentIndex
-        ColumnLayout {
-            TimeFocusPanel {
-                id: tfPanel
-                Layout.fillHeight: true
-                Layout.fillWidth: true
-             }
-            Row {
-                Layout.alignment: Qt.AlignHCenter
-                spacing:5
-                Button {
-                    id:acceptBtn
-                    text: "Accept"
-                    focus:true
-                    onClicked: root.state = "started"
+        TimeFocusPanel {
+            id: tfPanel
+            Layout.fillWidth: true
+            Layout.alignment: Qt.AlignHCenter
+            onBreakDurationChanged: root.apply()
+            onRepeatCountChanged: root.apply()
+            onWorkDurationChanged: root.apply()
+            Component.onCompleted: root.apply()
+            repeatCount: 3
+            workDuration: 1500000
+            breakDuration: 300000
+        }
+        GridView {
+            Layout.fillHeight: true
+            id: timeMapView
+            clip: true
+            Layout.preferredWidth: Math.min(Math.floor(root.width / cellWidth),
+                                            count) * cellWidth
+            Layout.alignment: Qt.AlignHCenter
+            cellHeight: 150
+            cellWidth: 140
+            model: root.model
+            delegate: Column {
+                id: delegate
+                Image {
+                    sourceSize.height: 100
+                    sourceSize.width: 100
+                    source: {
+                        if (completed)
+                            source: Qt.resolvedUrl("pics/completed")
+                        else if (type === PeriodInfo.Break)
+                            source: Qt.resolvedUrl("pics/coffee")
+                        else if (type === PeriodInfo.Work)
+                            source: Qt.resolvedUrl("pics/typewriter")
+                        else
+                            source: Qt.resolvedUrl("pics/typewriter")
+                    }
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    MouseArea {
+                        enabled: (rates.length && completed) ? true : false
+                        anchors.fill: parent
+                        cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
+                        onClicked: statsDial.showRates(rates)
+                    }
                 }
-                Button {
-                    id:stopBtn
-                    text: "Stop"
-                    enabled: false
-                    onClicked: root.state = "notStarted"
+                Text {
+                    text: {
+                        if (completed)
+                            text: "Completed " + rates[rates.length - 1].charCount
+                        else
+                            text: convert.msToStr(remainingTime)
+                    }
+                    anchors.horizontalCenter: parent.horizontalCenter
+                }
+            }
+        }
+
+        Row {
+            Layout.alignment: Qt.AlignHCenter
+            spacing: 10
+            Button {
+                id: acceptBtn
+                text: "Accept"
+                focus: true
+                onClicked: {
+                    timeFocusPage.executable.start()
+                }
+            }
+            Button {
+                id: stopBtn
+                text: "Stop"
+                enabled: false
+                onClicked: {
+                    timeFocusPage.executable.finish()
                 }
             }
         }
     }
-
-   TypingAnalyzer
-   {
-       id:analyzer
-       onRateChanged:{ root.rates.push(rate)}
-   }
-   StatisticsDialog
-   {
-       id: stDialog
-   }
+    StatisticsDialog {
+        id: statsDial
+        height: 600
+        width: 500
+    }
 }

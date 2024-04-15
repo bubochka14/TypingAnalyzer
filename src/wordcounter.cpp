@@ -1,11 +1,15 @@
 #include "wordcounter.h"
 WordCounter::WordCounter(QObject* parent)
 	:QObject(parent)
-	,wordCount(0)
-	,charCount(0)
-	,_state(LastIsSpace)
 {
-
+	clear();
+}
+void WordCounter::clear()
+{
+	wordCount = 0;
+	charCount = 0;
+	_lastChar = QChar();
+	_state = NoLast;
 }
 //QBindable<int> WordCounter::bindableWordCount() { return QBindable<int>(&_wordCount); }
 //QBindable<int> WordCounter::bindableCharCount() { return QBindable<int>(&_charCount); }

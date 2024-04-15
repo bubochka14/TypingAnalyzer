@@ -4,46 +4,77 @@ import QtQuick.Controls 6.2
 import QtQuick.Layouts
 import KeyboardAnalyzer
 
-ColumnLayout {
-    id: layout
-    property list<typingRate> rates
-    property alias chart: chart
-    onRatesChanged:
+Item {
+    id: root
+    Item
     {
-        chart.lineSeries.clear()
-        for(var i=0; i< rates.length; i++)
-           {console.log(rates[i].time, rates[i].cpm); chart.lineSeries.append(rates[i].time, rates[i].cpm)}
-        chart.xAxis.min = new Date(rates[0].time);
-        chart.xAxis.max = new Date(rates[rates.length-1].time);
-        totalWordsLbl.text= qsTr("Total words: ") + rates[rates.length - 1].wordCount;
-        avgWpmLbl.text= qsTr("Average WPM: ") + rates[rates.length - 1].avgWpm;
-        totalCharsLbl.text= qsTr("Total characters: ") + rates[rates.length - 1].charCount;
-        avgCpmLbl.text= qsTr("Average CPM: ") + rates[rates.length - 1].avgCpm;
+        id: private_stat
+        property list<typingRate> rates
 
     }
-    WPMChart {
-        id: chart
-        Layout.fillHeight: true
-        Layout.fillWidth: true
+    property alias chart: chart
+    property int yMaxDist: 40
+    function clear()
+    {
+        chart.lineSeries.clear();
+        private_stat.rates=[];
     }
-    Row {
-        Column {
-            Label {
-                id: totalWordsLbl
-                text: qsTr("Total words: ") + rates[rates.length - 1].wordCount
-            }
-            Label {
-                id: avgWpmLbl
-                text: qsTr("Average WPM: ") + rates[rates.length - 1].avgWpm
+
+    function appendRate(rate) {
+        chart.lineSeries.append(rate.time, rate.cpm)
+            totalWordsLbl.text = qsTr(
+                        "Total words: ") + rate.wordCount
+            avgWpmLbl.text = qsTr(
+                        "Average WPM: ") + rate.avgWpm
+            totalCharsLbl.text = qsTr(
+                        "Total characters: ") + rate.charCount
+            avgCpmLbl.text = qsTr(
+                        "Average CPM: ") + rate.avgCpm
+        private_stat.rates.push(rate);
+    }
+
+    ColumnLayout {
+        id: layout
+        anchors.fill: parent
+        WPMChart {
+            id: chart
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+        }
+        RowLayout {
+            id: la
+            Layout.alignment: Qt.AlignHCenter
+            Layout.margins: 10
+            Column {
+                Layout.fillWidth: true
+                spacing:10
+                Text {
+                    id: totalWordsLbl
+                    anchors.left: parent.left
+                    anchors.leftMargin: 50
+                    text: qsTr("Total words: ")
+                }
+                Text {
+                    id: avgWpmLbl
+                    anchors.left: parent.left
+                    anchors.leftMargin: 50
+                    text: qsTr("Average WPM: ")
+                }
             }
             Column {
-                Label {
+                Layout.fillWidth: true
+                spacing:10
+                Text {
                     id: totalCharsLbl
-                    text: qsTr("Total characters: ") + rates[rates.length - 1].charCount
+                    anchors.right: parent.right
+                    anchors.rightMargin: 50
+                    text: qsTr("Total characters: ")
                 }
-                Label {
+                Text {
                     id: avgCpmLbl
-                    text: qsTr("Average CPM: ") + rates[rates.length - 1].avgCpm
+                    anchors.right: parent.right
+                    anchors.rightMargin: 50
+                    text: qsTr("Average CPM: ")
                 }
             }
         }

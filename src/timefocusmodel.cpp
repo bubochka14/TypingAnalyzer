@@ -1,24 +1,16 @@
 #include "timefocusmodel.h"
 Q_LOGGING_CATEGORY(LC_TimeFocusModel, "TimeFocusModel");
 
-QHash<int, QByteArray> TimeFocusModel::_roles = { {Duration,"duration"},{Type,"type"}, {RemainingTime, "remainingTime"},{Completed,"completed"} };
+QHash<int, QByteArray> TimeFocusModel::_roles = { 
+    {Duration,"duration"},
+    {Type,"type"}, 
+    {RemainingTime, "remainingTime"},
+    {Completed,"completed"},
+    {Rates,"rates"}
+};
 TimeFocusModel::TimeFocusModel(QObject *parent)
     : QAbstractListModel{parent}
 {
-
-}
-TimeFocusModel* TimeFocusModel::create(QQmlEngine* qmlEngine, QJSEngine* jsEngine)
-{
-    return instance();
-}
-TimeFocusModel* TimeFocusModel::instance()
-{
-    if (!_p_inst)
-    {
-        _p_inst = new TimeFocusModel;
-        std::atexit([]() {delete _p_inst; });
-    }
-    return _p_inst;
 }
 bool TimeFocusModel::setData(const QModelIndex& index, const QVariant& value, int role ) 
 {
@@ -42,14 +34,14 @@ bool TimeFocusModel::setData(const QModelIndex& index, const QVariant& value, in
         _data[index.row()].completed = value.value<bool>();
         break;
     case Type:
-        if (!value.canConvert<QString>())
+        if (!value.canConvert< PeriodInfo::PeriodType>())
             return false;
-        _data[index.row()].type = value.value<QString>();
+        _data[index.row()].type = value.value< PeriodInfo::PeriodType>();
         break;
     case Rates:
-        if (!value.canConvert<RatesList>())
+        if (!value.canConvert<RateList>())
             return false;
-        _data[index.row()].rates = value.value<RatesList>();
+        _data[index.row()].rates = value.value<RateList>();
         break;
     }
     emit dataChanged(index, index);
@@ -87,6 +79,7 @@ QHash<int, QByteArray> TimeFocusModel::roleNames() const
 }
 int TimeFocusModel::rowCount(const QModelIndex& parent) const 
 {
+    Q_UNUSED(parent);
     return _data.size();
 }
 bool TimeFocusModel::insertRows(int row, int count, const QModelIndex& parent) 
@@ -94,7 +87,7 @@ bool TimeFocusModel::insertRows(int row, int count, const QModelIndex& parent)
     Q_UNUSED(parent);
     if (!count)
         return true;
-    if (row < 0 || row >rowCount())
+    if (row < 0 || row >rowCount() || count < 0)
         return false;
 
     beginInsertRows(parent, row, row + count - 1);

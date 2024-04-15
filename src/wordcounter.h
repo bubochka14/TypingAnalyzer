@@ -14,6 +14,7 @@ class WordCounter : public QObject
 public:
 	enum State
 	{
+		NoLast,
 		LastIsLetter,
 		LastIsSpace,
 		RepeatingSpace
@@ -21,6 +22,7 @@ public:
 	QProperty<int> wordCount;
 	QProperty<int> charCount;
 	explicit WordCounter(QObject *parent = nullptr);
+	void clear();
 	//virtual int charCount() const;
 	//virtual int wordCount() const;
 

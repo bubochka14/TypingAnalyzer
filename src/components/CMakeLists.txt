@@ -36,9 +36,9 @@ QT_ADD_QML_MODULE(components STATIC
         QML_FILES FreeModePage.qml
         QML_FILES WpmStatistics.qml
         QML_FILES TimeFocusPanel.qml
-        QML_FILES InputHandler.qml
-        QML_FILES MainWindowPage.qml
         QML_FILES StatisticsDialog.qml
+        QML_FILES TimeField.qml
+        QML_FILES ConfigurationList.qml
 
 )
 target_link_libraries(components PRIVATE Qt::QmlPrivate Qt::QuickPrivate)

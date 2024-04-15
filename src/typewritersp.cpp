@@ -6,7 +6,6 @@ TypeWriterSP::TypeWriterSP(QObject* parent)
 {
 	for (size_t i = 1;; i++)
 	{
-
 		if (!QFile(":/sounds/" + QString::number(i) + ".wav").exists())
 			break;
 		QSoundEffect* ks = new QSoundEffect(this);
@@ -17,13 +16,13 @@ TypeWriterSP::TypeWriterSP(QObject* parent)
 	_enterSound->setSource(QUrl("qrc:/sounds/enter.wav"));
 }
 
-QList<Qt::Key> TypeWriterSP::availableKeys() const
-{
-	return QList<Qt::Key>();
-}
+//QList<Qt::Key> TypeWriterSP::availableKeys() const
+//{
+//	return QList<Qt::Key>();
+//}
 bool TypeWriterSP::produceSound(const KeyEvent& e)
 {
-	if(e.type == KeyEvent::Press)
+	if(e.type == KeyEvent::Press && !e.isRepeating)
 	{
 		switch (e.key)
 		{
