@@ -74,6 +74,11 @@ void TimeFocusExecutable::resetModel() {
 void TimeFocusExecutable::decrement()
 {
 	int64_t remTime;
+	if (_model->rowCount() == 0)
+	{
+		finish();
+		return;
+	}
 	do
 	{
 		remTime = _model->data(_model->index(_topIndex), TimeFocusModel::RemainingTime).toLongLong();
@@ -84,7 +89,7 @@ void TimeFocusExecutable::decrement()
 		
 		remTime = ((remTime >= _interval) ? (remTime - _interval) : 0);
 	_model->setData(_model->index(_topIndex), remTime, TimeFocusModel::RemainingTime);
-	if(remTime == 0) // if current section has just closed
+	if (remTime == 0) // if current section has just closed
 	{
 		if (_model->data(_model->index(_topIndex), TimeFocusModel::Type) == PeriodInfo::Work)// setup rates to model
 		{
@@ -92,16 +97,18 @@ void TimeFocusExecutable::decrement()
 			_eKbProdAndMeter->finish();
 		}
 		_model->setData(_model->index(_topIndex), true, TimeFocusModel::Completed);//setup completed flag to model
-		++_topIndex;//move to next section
-		auto newPeriod = _model->data(_model->index(_topIndex), TimeFocusModel::Type).value<PeriodInfo::PeriodType>();
-		if (newPeriod == PeriodInfo::Work)
-			_eKbProdAndMeter->start();
-		if (_topIndex == _model->rowCount()-1)
+		if (_topIndex == _model->rowCount() - 1)// all sections completed but not finished yet
 		{
-			_timer.stop();// all sections completed but not finished yet
+			_timer.stop();
 			_periodProd->produceSound(PeriodInfo::Final);
-		}else
-			_periodProd->produceSound(newPeriod);
+		}
+		else {
+			++_topIndex;//move to next section
+			auto newPeriod = _model->data(_model->index(_topIndex), TimeFocusModel::Type).value<PeriodInfo::PeriodType>();
+			if (newPeriod == PeriodInfo::Work)
+				_eKbProdAndMeter->start();
+				_periodProd->produceSound(newPeriod);
+		}
 	}
 
 }
