@@ -14,23 +14,17 @@
 class KW_EXPORT WinKeyboardInterceptor : public AKeyBoardInterceptor
 {
 public:
-	enum CaptureFlags
-	{
-		REGULAR_BUTTONS = 0x01,
-		SYS_BUTTONS     = 0x02
-	};
 	static WinKeyboardInterceptor* instance();
 	~WinKeyboardInterceptor() override;
 protected:
-	KeyEvent converToKeyEvent(KeyEvent::InteractionType,uint code, std::wstring text, bool isRepeating);
+	void produceEvent(KeyEvent::InteractionType,std::wstring text, bool isRepeating);
 private:
 	friend LRESULT CALLBACK LLKBHookProc(int code, WPARAM wParam, LPARAM lParam);
 	void handleKey(int code, WPARAM wParam, LPARAM lParam);
-	//HINSTANCE _injHinst;
-	HHOOK _hhk;
-	CaptureFlags _flags;
 	static WinKeyboardInterceptor* _pInst;
-	explicit WinKeyboardInterceptor(CaptureFlags fl = REGULAR_BUTTONS);
+	explicit WinKeyboardInterceptor();
 	void installHook();
 	void uninstallHook();
+
+	HHOOK _hhk;
 };

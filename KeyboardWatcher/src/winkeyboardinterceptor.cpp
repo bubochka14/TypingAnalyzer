@@ -10,36 +10,11 @@ WinKeyboardInterceptor* WinKeyboardInterceptor::instance()
 	return _pInst;
 }
 typedef std::basic_string<TCHAR> tstring;
-KeyEvent WinKeyboardInterceptor::converToKeyEvent(KeyEvent::InteractionType type, uint code, std::wstring text, bool isRepeating) {
+void WinKeyboardInterceptor::produceEvent(KeyEvent::InteractionType type, std::wstring text, bool isRepeating) {
 	QString keyText = QString::fromStdWString(text);
 	QKeySequence sq(keyText);
-	KeyEvent ev = {type, sq[0].key(), sq[0].keyboardModifiers(), keyText, isRepeating };
-	return ev;
-}
-tstring VirtualKeyCodeToString(UCHAR virtualKey)
-{
-	UINT scanCode = MapVirtualKey(virtualKey, MAPVK_VK_TO_VSC);
-
-	TCHAR szName[128];
-	int result = 0;
-	switch (virtualKey)
-	{
-	case VK_LEFT: case VK_UP: case VK_RIGHT: case VK_DOWN:
-	case VK_RCONTROL: case VK_RMENU:
-	case VK_LWIN: case VK_RWIN: case VK_APPS:
-	case VK_PRIOR: case VK_NEXT:
-	case VK_END: case VK_HOME:
-	case VK_INSERT: case VK_DELETE:
-	case VK_DIVIDE:
-	case VK_NUMLOCK:
-		scanCode |= KF_EXTENDED;
-	default:
-		result = GetKeyNameText(scanCode << 16, szName, 128);
-	}
-	if (result == 0)
-		throw std::system_error(std::error_code(GetLastError(), std::system_category()),
-			"WinAPI Error occured.");
-	return szName;
+	KeyEvent ev = {type, sq[0].key(), keyText, isRepeating };
+	emit keyInteracted(ev);
 }
 void WinKeyboardInterceptor::handleKey(int ccode, WPARAM wParam, LPARAM lParam)
 {
@@ -49,21 +24,18 @@ void WinKeyboardInterceptor::handleKey(int ccode, WPARAM wParam, LPARAM lParam)
 	//хранит прошлое состояние кнопки по виртуальному ключу 0 - была нажата, 1 - отпущена
 	static BYTE lastKbState[256] = { 0 };
 	static WCHAR Text[64] = { 0 };
-	DWORD idThread;
 	GetKeyNameText(pLLHKey->scanCode << 16, Text, 64);
 	switch (wParam)
 	{
 	case WM_KEYDOWN:
-		emit keyInteracted(converToKeyEvent(KeyEvent::Press, pLLHKey->vkCode, Text, lastKbState[VKey]));
+		produceEvent(KeyEvent::Press, Text, lastKbState[VKey]);
 		break;
 	case WM_KEYUP:
-		emit keyInteracted(converToKeyEvent(KeyEvent::Release, pLLHKey->vkCode, Text, false));
+		produceEvent(KeyEvent::Release, Text, false);
 		break;
 	default:
 		break;
 	}
-	GetKeyState(VK_SHIFT);
-	GetKeyState(VK_MENU);
 	lastKbState[VKey] = !(wParam&1);
 }
 
@@ -75,7 +47,7 @@ LRESULT CALLBACK LLKBHookProc(int code, WPARAM wParam, LPARAM lParam) {
 	return CallNextHookEx(0, code, wParam, lParam);
 
 }
-WinKeyboardInterceptor::WinKeyboardInterceptor(WinKeyboardInterceptor::CaptureFlags fl)
+WinKeyboardInterceptor::WinKeyboardInterceptor()
 {
 	installHook();
 }
