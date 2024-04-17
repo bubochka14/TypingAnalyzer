@@ -1,16 +1,12 @@
 
 # Добавьте источник в исполняемый файл этого проекта.
-add_library(KeyboardInterceptor SHARED 	
+add_library(KeyboardInterceptor STATIC 	
 	"src/keyboardInterceptor.cpp"
 	"src/winkeyboardinterceptor.cpp"  
 	"include/keyboardInterceptor.h"
 	"include/keyevent.h"
 	"include/akeyboardInterceptor.h"
 	"src/akeyboardInterceptor.cpp"
-)
-QT_ADD_QML_MODULE (KeyboardInterceptor
-	URI KeyboardInterceptor
-	PLUGIN_TARGET KeyboardInterceptor
 )
 #add_library(winKeyboardCapture SHARED "winkeyboardinjection.cpp") 
 target_include_directories(KeyboardInterceptor
