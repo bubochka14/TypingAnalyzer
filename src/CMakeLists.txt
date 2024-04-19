@@ -63,13 +63,13 @@ set (CPP_SOURCES
 	"executableholder.cpp"
 )
 add_executable(KeyboardAnalyzer)
-#if(MSVC)
- #   target_link_options(KeyboardAnalyzer
- #       PUBLIC
-        #$<$<CONFIG:Debug>:/subsystem:CONSOLE>
-        #$<$<CONFIG:Release>:/subsystem:WINDOWS;/ENTRY:mainCRTStartup>
-    #)
-#endif()
+if(MSVC)
+    target_link_options(KeyboardAnalyzer
+        PUBLIC
+        $<$<CONFIG:Debug>:/subsystem:CONSOLE>
+        $<$<CONFIG:Release>:/subsystem:WINDOWS;/ENTRY:mainCRTStartup>
+    )
+endif()
 
 QT_ADD_QML_MODULE(KeyboardAnalyzer 
 	URI "KeyboardAnalyzer"
