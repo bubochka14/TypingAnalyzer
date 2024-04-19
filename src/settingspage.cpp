@@ -6,6 +6,10 @@ SettingsPage::SettingsPage(QQmlEngine* e, QObject* parent)
 {
 	setIconSource(QUrl("qrc:/components/icons/settings"));
 }
+QStringList SettingsPage::headers() const
+{
+	return _addedSettings.keys();
+}
 
 QQuickItem* SettingsPage::getContent()
 {
@@ -17,12 +21,17 @@ QQuickItem* SettingsPage::getContent()
 	}
 	return _content;
 }
-void SettingsPage::addSetting(AbstractAppSetting* s)
+void SettingsPage::addSetting(AbstractAppSetting* s, const QString& header)
 {
-	_settings.append(s);
-	emit settingsChanged();
+	if(!_addedSettings.contains(header))
+	{
+		_addedSettings[header].append(s);
+		_headers.append(header);
+		emit headersChanged();
+	}else 
+		_addedSettings[header].append(s);
 }
-QList<AbstractAppSetting*> SettingsPage::settings() const
+QList<AbstractAppSetting*> SettingsPage::addedSettings(const QString& header) const
 {
-	return _settings;
+	return _addedSettings[header];
 }

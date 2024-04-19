@@ -6,20 +6,48 @@ import KeyboardAnalyzer
 
 Page {
     id: root
-    property list<AbstractAppSetting> appSettings: settingsPage.settings
+    property int settingNameWidth: 150
     padding: 15
     ListView {
+        id: listView
         anchors.fill: parent
-        model: appSettings
-        delegate: RowLayout {
-            id: delegateRow
-            Layout.alignment: Qt.AlignVCenter
-            spacing: 10
-            Text {
-                id: nameTxt
-                text: name
+        model: settingsPage.headers
+        delegate: GroupBox {
+            id: gb
+            title: modelData
+            width: listView.width
+            ColumnLayout {
+                id: delegateRow
+                anchors.fill: parent
+                Repeater {
+                    id: rep
+                    model: settingsPage.addedSettings(modelData)
+                    RowLayout {
+                        spacing: 10
+                        id: row
+                        Item {
+                            Layout.fillWidth: true
+                            height: nameTxt.height
+                            Text {
+                                id: nameTxt
+                                anchors.right: parent.right
+                                text: modelData.name
+                            }
+                        }
+                        Item {
+                            id:proxy
+                            property int contentHeight:50
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: contentHeight
+                            Component.onCompleted: {
+                                var obj = modelData.getContent()
+                                proxy.children.push(obj)
+                                proxy.contentHeight= obj.height
+                            }
+                        }
+                    }
+                }
             }
-            Component.onCompleted: delegateRow.children.push(appSettings[index].getContent())
         }
     }
 }

@@ -25,16 +25,16 @@ void PageApplication::setupSettings()
 	connect(kbSett, &AbstractAppSetting::valueChanged, this, [=]() {
 		setKbProd((IKBSoundProducer*)kbSett->value().value<IKBSoundProducer*>());
 		});
-	sPage->addSetting(kbSett);
+	sPage->addSetting(kbSett, "General");
 	for (auto& p : _pages)
 	{
 		for (auto& s : p->settings())
 		{
-			sPage->addSetting(s);
+			sPage->addSetting(s,p->name());
 		}
 	}
 	addPage(sPage);
-
+	qDebug() << sPage->headers();
 
 }
 QList<AppPage*> PageApplication::pages() const
