@@ -19,10 +19,9 @@ set(QML_RESOURCES
 )
 set(CPP_SOURCES 
 )
-
+add_subdirectory(ui)
 QT_ADD_QML_MODULE(components STATIC
     PLUGIN_TARGET components
-
     URI components
     RESOURCES 
         ${QML_RESOURCES}
@@ -32,13 +31,15 @@ QT_ADD_QML_MODULE(components STATIC
         ${CPP_SOURCES}
     DEPENDENCIES
         Quick
+        ui
         QML_FILES PageSelector.qml
         QML_FILES FreeModePage.qml
         QML_FILES WpmStatistics.qml
         QML_FILES TimeFocusPanel.qml
         QML_FILES StatisticsDialog.qml
         QML_FILES TimeField.qml
-        QML_FILES ConfigurationList.qml
+    IMPORT_PATH "${QT_QML_OUTPUT_DIRECTORY}/components/ui"
+
 
 )
-target_link_libraries(components PRIVATE Qt::QmlPrivate Qt::QuickPrivate)
+target_link_libraries(components PRIVATE Qt::QmlPrivate Qt::QuickPrivate ui)

@@ -1,8 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import KeyboardAnalyzer
-ComboBox
+TextField
 {
-    id: root
+    id:root
+    height: 40
 }
