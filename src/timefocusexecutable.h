@@ -10,7 +10,7 @@ class TimeFocusExecutable : public Executable
 	Q_OBJECT;
 	Q_PROPERTY(quint32 decrementInterval READ decrementInterval WRITE setDecrementInterval NOTIFY decrementIntervalChanged);
 	Q_PROPERTY(IPeriodSoundProducer* periodProducer READ periodProducer WRITE setPeriodProducer NOTIFY periodProducerChanged)
-//	Q_PROPERTY(quint16 topIndex READ topIndex  NOTIFY topIndexChangeds)
+	Q_PROPERTY(quint16 topIndex READ topIndex  NOTIFY topIndexChanged)
 public:
 	explicit TimeFocusExecutable(TimeFocusModel* model,IKBSoundProducer* kbProd, 
 		IPeriodSoundProducer* perProd,QObject* parent = nullptr);
@@ -28,9 +28,11 @@ public slots:
 signals:
 	void decrementIntervalChanged();
 	void periodProducerChanged();
-	void kbProdChanged();
+	void topIndexChanged();
 protected slots:
 	void decrement();
+protected:
+	void setTopIndex(quint16 other);
 private:
 	QTimer _timer;
 	IPeriodSoundProducer* _periodProd;

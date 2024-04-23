@@ -26,6 +26,13 @@ void PageApplication::setupSettings()
 		setKbProd((IKBSoundProducer*)kbSett->value().value<IKBSoundProducer*>());
 		});
 	sPage->addSetting(kbSett, "General");
+
+	SliderSetting* sliderSett = new SliderSetting("Keyboard sounds volume", this);
+	//connect(sliderSett, &SliderSetting::valueChanged, this, [=]()
+	//	{
+	//		
+	//	})
+	sPage->addSetting(sliderSett, "General");
 	for (auto& p : _pages)
 	{
 		for (auto& s : p->settings())
@@ -34,8 +41,6 @@ void PageApplication::setupSettings()
 		}
 	}
 	addPage(sPage);
-	qDebug() << sPage->headers();
-
 }
 QList<AppPage*> PageApplication::pages() const
 {

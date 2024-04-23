@@ -1,8 +1,8 @@
 #pragma once
 #include <QObject>
+#include "slidersetting.h"
 #include <qapplication.h>
 #include <qqmlapplicationengine.h>
-#include "typewritersp.h"
 #include "timefocuspage.h"
 #include "qloggingcategory.h"
 #include "customkbproducer.h"
@@ -11,7 +11,6 @@
 #include <qqmlcontext.h>
 #include "qproperty.h"
 #include "listsetting.h"
-#include "namedobject.h"
 #include "freemodepage.h"
 Q_DECLARE_LOGGING_CATEGORY(LC_APP);	
 

@@ -33,7 +33,7 @@ QQuickItem* ListSetting::getContent()
 {
 	if (!_content)
 	{
-		ContentBuilder builder(QUrl("qrc:/components/ConfigurationList.qml"), _engine);
+		ContentBuilder builder(QUrl("qrc:/components/ui/UIComboBox.qml"), _engine);
 		builder.addContextPointer("listSetting", (QObject*)this);
 		_content = builder.build();
 		_content->setProperty("model", _varHash.keys());

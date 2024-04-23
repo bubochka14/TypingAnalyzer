@@ -41,5 +41,9 @@ QQuickItem* TimeFocusPage::getContent()
 }
 QList<AbstractAppSetting*> TimeFocusPage::settings() const
 {
-	return QList<AbstractAppSetting*>()<< _periodProdSetting;
+	return QList<AbstractAppSetting*>()<< _periodProdSetting << _volume;
+}
+quint16 TimeFocusPage::activeIndex() const
+{
+	return _ex->topIndex();
 }

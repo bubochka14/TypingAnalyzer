@@ -81,30 +81,31 @@ void TimeFocusExecutable::decrement()
 	}
 	do
 	{
-		remTime = _model->data(_model->index(_topIndex), TimeFocusModel::RemainingTime).toLongLong();
+		remTime = _model->data(_model->index(topIndex()), TimeFocusModel::RemainingTime).toLongLong();
 		if (remTime > 0)
 			break;
+		setTopIndex(topIndex()+1);
 
-	} while (_topIndex < _model->rowCount());
+	} while (topIndex() < _model->rowCount());
 		
 		remTime = ((remTime >= _interval) ? (remTime - _interval) : 0);
-	_model->setData(_model->index(_topIndex), remTime, TimeFocusModel::RemainingTime);
+	_model->setData(_model->index(topIndex()), remTime, TimeFocusModel::RemainingTime);
 	if (remTime == 0) // if current section has just closed
 	{
-		if (_model->data(_model->index(_topIndex), TimeFocusModel::Type) == PeriodInfo::Work)// setup rates to model
+		if (_model->data(_model->index(topIndex()), TimeFocusModel::Type) == PeriodInfo::Work)// setup rates to model
 		{
-			_model->setData(_model->index(_topIndex), QVariant::fromValue(_tMeter->rates()), TimeFocusModel::Rates);
+			_model->setData(_model->index(topIndex()), QVariant::fromValue(_tMeter->rates()), TimeFocusModel::Rates);
 			_eKbProdAndMeter->finish();
 		}
-		_model->setData(_model->index(_topIndex), true, TimeFocusModel::Completed);//setup completed flag to model
-		if (_topIndex == _model->rowCount() - 1)// all sections completed but not finished yet
+		_model->setData(_model->index(topIndex()), true, TimeFocusModel::Completed);//setup completed flag to model
+		if (topIndex() == _model->rowCount() - 1)// all sections completed but not finished yet
 		{
 			_timer.stop();
 			_periodProd->produceSound(PeriodInfo::Final);
 		}
 		else {
-			++_topIndex;//move to next section
-			auto newPeriod = _model->data(_model->index(_topIndex), TimeFocusModel::Type).value<PeriodInfo::PeriodType>();
+			setTopIndex(topIndex()+1);//move to next section
+			auto newPeriod = _model->data(_model->index(topIndex()), TimeFocusModel::Type).value<PeriodInfo::PeriodType>();
 			if (newPeriod == PeriodInfo::Work)
 				_eKbProdAndMeter->start();
 				_periodProd->produceSound(newPeriod);
@@ -117,10 +118,17 @@ void TimeFocusExecutable::finish()
 	if (state() == Finished)
 		return;
 	_eKbProdAndMeter->finish();
-	_topIndex = 0;
+	setTopIndex(0);
 	_timer.stop();
 	resetModel();
 	setState(Finished);
 
 
+}
+void TimeFocusExecutable::setTopIndex(quint16 other)
+{
+	if (_topIndex == other)
+		return;
+	_topIndex = other;
+	emit topIndexChanged();
 }

@@ -31,8 +31,8 @@ Page {
     }
     function apply() {
         model.clear()
-        if(TimeFocusPanel.repeatCount==0)
-            return;
+        if (TimeFocusPanel.repeatCount == 0)
+            return
         model.insertRows(0, timePanel.repeatCount * 2 - 1)
         var workMs = timePanel.workDuration
         var breakMs = timePanel.breakDuration
@@ -44,7 +44,8 @@ Page {
             model.setData(model.index(i, 0), 0, TimeFocusModel.Completed)
             model.setData(model.index(i, 0), PeriodInfo.Work,
                           TimeFocusModel.Type)
-            if (i != timePanel.repeatCount * 2 - 1) { // skip last break
+            if (i != timePanel.repeatCount * 2 - 1) {
+                // skip last break
                 model.setData(model.index(i + 1, 0), breakMs,
                               TimeFocusModel.Duration)
                 model.setData(model.index(i + 1, 0), breakMs,
@@ -121,18 +122,51 @@ Page {
             breakDuration: 300000
         }
         GridView {
-            Layout.fillHeight: true
             id: timeMapView
             clip: true
+            Layout.fillHeight: true
             Layout.preferredWidth: Math.min(Math.floor(root.width / cellWidth),
                                             count) * cellWidth
-            Layout.alignment: Qt.AlignHCenter
+            Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
             cellHeight: 150
-            cellWidth: 140
+            cellWidth: 150
             model: root.model
-            delegate: Column {
+            delegate: Item {
                 id: delegate
+                height: timeMapView.cellHeight
+                width: timeMapView.cellWidth
                 Image {
+                    id: image
+                    states: [
+                        State {
+                            name: "ACTIVE"
+                        }
+                    ]
+                    transitions: [
+                        Transition {
+                            from: "*"
+                            to: "ACTIVE"
+                            RotationAnimation {
+                                target: image
+                                from: 0
+                                loops: Animation.Infinite
+                                to: 360
+                                duration: 6000
+                            }
+                        },
+                        Transition {
+                            from: "ACTIVE"
+                            to: "*"
+                            ScriptAction{script: image.rotation =0}
+                        }
+                    ]
+                    state: {
+                        if (!completed && timeFocusPage.activeIndex == index
+                                && root.state == "Started")
+                            return "ACTIVE"
+                        else
+                            return "*"
+                    }
                     sourceSize.height: 100
                     sourceSize.width: 100
                     source: {
@@ -145,7 +179,11 @@ Page {
                         else
                             source: Qt.resolvedUrl("pics/typewriter")
                     }
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors{
+                        horizontalCenter: parent.horizontalCenter
+                        top:parent.top
+                        topMargin: 15
+                    }
                     MouseArea {
                         enabled: (rates.length && completed) ? true : false
                         anchors.fill: parent
@@ -153,14 +191,19 @@ Page {
                         onClicked: statsDial.showRates(rates)
                     }
                 }
-                Text {
+                Label {
+                    font.pixelSize: 14
                     text: {
                         if (completed)
                             text: "Completed " + rates[rates.length - 1].charCount
                         else
                             text: convert.msToStr(remainingTime)
                     }
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors{
+                        horizontalCenter: parent.horizontalCenter
+                        bottom: parent.bottom
+                        bottomMargin: 10
+                    }
                 }
             }
         }

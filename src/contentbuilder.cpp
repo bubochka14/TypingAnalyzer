@@ -29,7 +29,7 @@ QQuickItem* ContentBuilder::build()
 	QObject* obj = comp.create(_context);
 	if (comp.isError())
 	{
-		qCritical(LC_CONTENT_BUILDER) << "Error while creating content" << ": " << comp.errorString();
+		qCritical(LC_CONTENT_BUILDER) << "Error while creating content" << ": " << comp.errors();
 		return nullptr;
 	}
 	else
