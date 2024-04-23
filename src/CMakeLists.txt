@@ -7,6 +7,8 @@
 set(QML_SOURCES 
 
 )
+set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/qml)
+
 set (CPP_SOURCES 
 	"KeyboardAnalyzer.cpp"	
 	"KeyboardAnalyzer.h" 
@@ -26,6 +28,8 @@ set (CPP_SOURCES
 	"customkbproducer.cpp" 
 	"apppage.h" 
 	"namedobject.h" 
+	"slidersetting.h"
+	"slidersetting.cpp"
 	"timefocuspage.h" 
 	"apppage.cpp" 
 	"timefocuspage.cpp"
@@ -58,7 +62,7 @@ set (CPP_SOURCES
 	"executablekbproducer.h" 
 	"executablekbproducer.cpp" 
 	"application.h" 
-        "application.cpp"
+    "application.cpp"
 	"executableholder.h" 
 	"executableholder.cpp"
 )
@@ -84,7 +88,7 @@ target_compile_definitions(KeyboardAnalyzer PRIVATE APP_NAME="KeyboardAnalyzer" 
 target_link_libraries(KeyboardAnalyzer PRIVATE 
 	Qt6::Core 
 	Qt6::Qml 
-        Qt6::Gui
+    Qt6::Gui
 	Qt6::Charts
 	Qt6::Multimedia
 	Qt6::Quick 
