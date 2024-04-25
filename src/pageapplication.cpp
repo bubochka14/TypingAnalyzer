@@ -28,10 +28,12 @@ void PageApplication::setupSettings()
 	sPage->addSetting(kbSett, "General");
 
 	SliderSetting* sliderSett = new SliderSetting("Keyboard sounds volume", this);
-	//connect(sliderSett, &SliderSetting::valueChanged, this, [=]()
-	//	{
-	//		
-	//	})
+	sliderSett->setValue(kbProd()->volume() * sliderSett->max());
+	connect(sliderSett, &SliderSetting::valueChanged, this, [=]()
+	{
+		if (sliderSett->value().canConvert<double>())
+			kbProd()->setVolume(sliderSett->value().value<double>());
+	});
 	sPage->addSetting(sliderSett, "General");
 	for (auto& p : _pages)
 	{

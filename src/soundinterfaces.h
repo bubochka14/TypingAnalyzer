@@ -21,28 +21,24 @@ public:
 };
 uint qHash(const PeriodInfo& item);
 bool operator==(const PeriodInfo& p1, const PeriodInfo& p2);
-class IPeriodSoundProducer /*: public virtual QObject*/
+class IPeriodSoundProducer
 {
-	//Q_OBJECT;
-
 public:
 
 	virtual bool produceSound(const PeriodInfo&) = 0;
+	virtual void setVolume(double other) = 0;
+	virtual double volume() const = 0;
 	virtual ~IPeriodSoundProducer() {}
-//protected:
-//	explicit IPeriodSoundProducer(QObject* parent) : QObject(parent) {}
 };
 Q_DECLARE_INTERFACE(IPeriodSoundProducer,"Period sound producer interface")
 Q_DECLARE_METATYPE(IPeriodSoundProducer*)
-class IKBSoundProducer //: public QObject
+class IKBSoundProducer
 {
-	//Q_OBJECT;
-
 public:
 	virtual bool produceSound(const KeyEvent&) = 0;
+	virtual void setVolume(double other) = 0;
+	virtual double volume() const = 0;
 	virtual ~IKBSoundProducer() {}
-//protected:
-	//explicit IKBSoundProducer(QObject* parent) : QObject(parent) {}
 };
 
 Q_DECLARE_INTERFACE(IKBSoundProducer,"Keyboard sound producer interface")

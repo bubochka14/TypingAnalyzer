@@ -3,6 +3,7 @@ TypeWriterSP::TypeWriterSP(QObject* parent)
 	:QObject(parent)
 	,_enterSound(new QSoundEffect)
 	,_spaceSound(new QSoundEffect)
+	,_vol(1)
 {
 	for (size_t i = 1;; i++)
 	{
@@ -15,11 +16,21 @@ TypeWriterSP::TypeWriterSP(QObject* parent)
 	_spaceSound->setSource(QUrl("qrc:/sounds/space.wav"));
 	_enterSound->setSource(QUrl("qrc:/sounds/enter.wav"));
 }
-
-//QList<Qt::Key> TypeWriterSP::availableKeys() const
-//{
-//	return QList<Qt::Key>();
-//}
+double TypeWriterSP::volume() const
+{
+	return _vol;
+}
+void TypeWriterSP::setVolume(double other)
+{
+	if (_vol == other)
+		return;
+	_vol = other;
+	for (auto& i : _keySounds)
+		i->setVolume(_vol);
+	_spaceSound->setVolume(_vol);
+	_enterSound->setVolume(_vol);
+	emit volumeChanged();
+}
 bool TypeWriterSP::produceSound(const KeyEvent& e)
 {
 	if(e.type == KeyEvent::Press && !e.isRepeating)

@@ -1,6 +1,7 @@
 #include "customperiodproducer.h"
 CustomPeriodProducer::CustomPeriodProducer(QObject* parent)
 	:QObject(parent)
+	,_vol(1)
 {
 }
 bool CustomPeriodProducer::produceSound(const PeriodInfo& info)
@@ -39,5 +40,18 @@ void CustomPeriodProducer::setSounds(const PeriodInfo& info, const QList<QUrl>& 
 		ef->setSource(url[i]);
 		_sounds[info][i]=ef;
 	}
-
+}
+double CustomPeriodProducer::volume() const
+{
+	return _vol;
+}
+void CustomPeriodProducer::setVolume(double other)
+{
+	if (other == _vol)
+		return;
+	_vol == other;
+	for (auto& period : _sounds)
+		for (auto& i : period)
+			i->setVolume(_vol);
+	emit volumeChanged();
 }

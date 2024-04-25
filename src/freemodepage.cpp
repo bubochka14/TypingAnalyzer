@@ -16,7 +16,7 @@ FreeModePage::FreeModePage(Application* a, QQmlEngine* e, QObject* parent)
     connect(_typingMeter, &TypingMeter::ratesChanged,this, &FreeModePage::ratesChanged);
     connect(_app, &Application::kbProdChanged, this, [=]() {_eKbProd->setKBSoundProducer(_app->kbProd()); });
 }
-QList<typingRate> FreeModePage::rates() const { return _typingMeter->rates(); }
+QList<typingRate> FreeModePage::rates() const {return _typingMeter->rates(); }
 Executable* FreeModePage::executable() const { return _freeModeExecutable; }
 QQuickItem* FreeModePage::getContent()
 {

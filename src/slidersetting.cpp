@@ -2,17 +2,17 @@
 SliderSetting::SliderSetting(const QString& name, QObject* parent)
 	:AbstractAppSetting(name, parent)
 	,_min(0)
-	,_max(100)
-	,_content(0)
+	,_max(1)
+	,_content(nullptr)
 	,_engine(new QQmlEngine(this))
 {}
 bool SliderSetting::setValue(const QVariant& other)
 {
-	if (!other.canConvert<quint64>() || _value == other.value<quint64>())
+	qDebug() << other;
+	if (!other.canConvert<double>() || _value == other.value<double>())
 		return false;
-	if(_value != other.value<quint64>()){
-		_value = other.value<quint64>();
-		_content->setProperty("value", _value);
+	if(_value != other.value<double>()){
+		_value = other.value<double>();
 		emit valueChanged();
 	}
 
@@ -50,12 +50,14 @@ QQuickItem* SliderSetting::getContent()
 		ContentBuilder builder(QUrl("qrc:/components/ui/UISlider.qml"), _engine);
 		builder.addContextPointer("listSetting", (QObject*)this);
 		_content = builder.build();
+		_content->setProperty("value", _value);
+		_content->setProperty("min", _min);
+		_content->setProperty("max", _max);
 		connect(_content, SIGNAL(valueChanged()), this, SLOT(handleValueChange()));
 	}
 	return _content;
 }
 void SliderSetting::handleValueChange()
 {
-	_value = _content->property("value").toInt();
-	emit valueChanged();
+	setValue(_content->property("value").toDouble());
 }

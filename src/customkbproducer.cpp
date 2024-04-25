@@ -11,13 +11,28 @@ KeyInfo::KeyInfo(const KeyEvent& e) : key(e.key), type(e.type) {}
 
 CustomKBProducer::CustomKBProducer(QObject* parent)
 	:QObject(parent)
+	,_vol(1)
 {
 }
 void CustomKBProducer::setConfig(Config*)
 {
 
 }
-
+void CustomKBProducer::setVolume(double other)
+{
+	if (other == _vol)
+		return;
+	_vol = other;
+	for (auto& i : _specKeys)
+		i->setVolume(_vol);
+	for (auto& i : _random)
+		i->setVolume(_vol);
+	emit volumeChanged();
+}
+double CustomKBProducer::volume() const
+{
+	return _vol;
+}
 bool CustomKBProducer::produceSound(const KeyEvent& e)
 {
 	if (_specKeys.contains(e))

@@ -24,6 +24,6 @@ signals:
 private:
 	QQuickItem* _content;
 	QQmlEngine* _engine;
-	quint64 _value;
+	double _value;
 	int _min, _max;
 };

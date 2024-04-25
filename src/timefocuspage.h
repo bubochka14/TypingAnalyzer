@@ -35,5 +35,5 @@ private:
     Application* _app;
 	QQmlEngine* _engine;
 	ListSetting* _periodProdSetting;
-	SliderSetting* _volume;
+	SliderSetting* _volumeSetting;
 };
