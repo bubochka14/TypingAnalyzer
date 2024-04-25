@@ -61,20 +61,20 @@ typingRate TypingMeter::calcRate()
 	newRate.time = QDateTime::currentDateTime().toMSecsSinceEpoch();
 	if(_rates.size())
 	{
-		newRate.wpm = (_wc->wordCount - _rates.last().wordCount) * 60000 / _updatingInterval;
-		newRate.cpm = (_wc->charCount - _rates.last().charCount) * 60000 / _updatingInterval;
-		newRate.avgCPM = _wc->charCount * 60000 / (newRate.time - _rates.first().time);
-		newRate.avgWPM = _wc->wordCount* 60000 / (newRate.time -  _rates.first().time);
+		newRate.wpm = (_wc->wordCount() - _rates.last().wordCount) * 60000 / _updatingInterval;
+		newRate.cpm = (_wc->charCount() - _rates.last().charCount) * 60000 / _updatingInterval;
+		newRate.avgCPM = _wc->charCount() * 60000 / (newRate.time - _rates.first().time);
+		newRate.avgWPM = _wc->wordCount()* 60000 / (newRate.time -  _rates.first().time);
 	}
 	else
 	{
-		newRate.wpm = _wc->wordCount * 60000 / _updatingInterval;
-		newRate.cpm = _wc->charCount * 60000 / _updatingInterval;
+		newRate.wpm = _wc->wordCount() * 60000 / _updatingInterval;
+		newRate.cpm = _wc->charCount() * 60000 / _updatingInterval;
 		newRate.avgCPM = newRate.cpm;
 		newRate.avgWPM = newRate.wpm;
 	}
-	newRate.wordCount = (int)_wc->wordCount;
-	newRate.charCount = (int)_wc->charCount;
+	newRate.wordCount = (int)_wc->wordCount();
+	newRate.charCount = (int)_wc->charCount();
 	return newRate;
 }
 void TypingMeter::update()
@@ -86,11 +86,14 @@ void  TypingMeter::handleKeyEvent(const KeyEvent& e)
 {
 	if (state() == Started)
 	{
-		if (e.type != KeyEvent::Release)
+		if (e.type != KeyEvent::Release) // counting only key release interactions
 			return;
-		if (e.key == Qt::Key_Space)
-			_wc->push_char(' ');
-		else
-			_wc->push_char(e.text[0]);
+		switch (e.key)
+		{
+		case Qt::Key_Space:_wc->push_char(' '); break;
+		case Qt::Key_Tab:_wc->push_char('\t'); break;
+		case Qt::Key_Enter:_wc->push_char('\n'); break;
+		default:_wc->push_char(e.text[0]); break;
+		}
 	}
 }

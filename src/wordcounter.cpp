@@ -6,54 +6,68 @@ WordCounter::WordCounter(QObject* parent)
 }
 void WordCounter::clear()
 {
-	wordCount = 0;
-	charCount = 0;
-	_lastChar = QChar();
-	_state = NoLast;
+	setWordCount(0);
+	setCharCount(0);
+	setState(NoLast);
 }
-//QBindable<int> WordCounter::bindableWordCount() { return QBindable<int>(&_wordCount); }
-//QBindable<int> WordCounter::bindableCharCount() { return QBindable<int>(&_charCount); }
-
-//int  WordCounter::charCount() const
-//{
-//	return _charCount;
-//}
-//int  WordCounter::wordCount() const
-//{
-//	return _wordCount; 
-//}
-//void WordCounter::setWordCount(int other)
-//{
-//	_wordCount = other;
-//}
-//void WordCounter::setCharCount(int other)
-//{
-//	_charCount = other;
-//}
-void WordCounter::push_word(const QString& str)
+quint64 WordCounter::charCount() const
 {
-	wordCount = wordCount + 1;
-	charCount = charCount + str.length();
+	return _charCount;
+}
+quint64 WordCounter::wordCount() const
+{
+	return _wordCount; 
+}
+void WordCounter::setWordCount(quint64 other)
+{
+	if (other == _wordCount)
+		return;
+	_wordCount = other;
+	emit wordCountChanged();
+}
+void WordCounter::setCharCount(quint64 other)   
+{
+	if (other == _charCount)
+		return;
+	_charCount = other;
+	emit charCountChanged();
+}
+void WordCounter::push_text(const QString& str)
+{
+	for (auto& i : str)
+		push_char(i);
 }
 void WordCounter::push_char(const QChar& c)
 {
-	charCount = charCount + 1;
-	switch (_state)
+	setCharCount(charCount() + 1);
+	switch (state())
 	{
-	case WordCounter::LastIsLetter:
-		if (c.isSpace())
-			_state = LastIsSpace;
+	case WordCounter::NoLast:
+		setWordCount(wordCount() + 1);
+	case WordCounter::LastIsLetter: 
+		if (checkSeparator(c))
+			if (state() == LastIsLetter)
+			{
+				setWordCount(wordCount()+1);
+				setState(LastIsSeparator);
+			}
+			else
+				setState(LastIsLetter);
 		break;
-	case WordCounter::LastIsSpace:
-		if (!c.isSpace())
-		{
-			_state = LastIsLetter;
-			//setWordCount(wordCount() + 1);
-			wordCount = wordCount + 1;
-		}
-		break;
-	default:
-		break;
-
 	}
+}
+bool WordCounter::checkSeparator(const QChar& other)
+{
+	return other.isSpace() || other == '\t' || other == '\n';
+}
+void WordCounter::setState(State other)
+{
+	if (_state == other)
+		return;
+	_state = other;
+	emit stateChanged();
+}
+WordCounter::State WordCounter::state() const
+{
+	return _state;
 }

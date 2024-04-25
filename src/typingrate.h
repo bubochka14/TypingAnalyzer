@@ -16,7 +16,7 @@ private:
 	Q_PROPERTY(int cpm MEMBER cpm);
 	Q_PROPERTY(int wordCount MEMBER wordCount);
 	Q_PROPERTY(int avgCpm MEMBER avgCPM);
-	Q_PROPERTY(int avgWpm MEMBER avgCPM);
+	Q_PROPERTY(int avgWpm MEMBER avgWPM);
 	Q_PROPERTY(int charCount MEMBER charCount);
 	Q_PROPERTY(long long time MEMBER time);
 };

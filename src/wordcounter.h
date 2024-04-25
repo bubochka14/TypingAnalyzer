@@ -2,43 +2,41 @@
 #include <QObject>
 #include <QQmlEngine>
 #include "KeyboardInterceptor.h"
-
 #include <QObjectBindableProperty>
-//also a char counter
+
 class WordCounter : public QObject
 {
 	Q_OBJECT;
 	QML_UNCREATABLE("")
-	//Q_PROPERTY(int wordCount READ wordCount WRITE setWordCount NOTIFY wordCountChanged BINDABLE bindableWordCount);
-    //Q_PROPERTY(int charCount READ charCount WRITE setCharCount NOTIFY charCountChanged BINDABLE bindableCharCount);
 public:
 	enum State
 	{
 		NoLast,
 		LastIsLetter,
-		LastIsSpace,
-		RepeatingSpace
+		LastIsSeparator,
 	};
-	QProperty<int> wordCount;
-	QProperty<int> charCount;
 	explicit WordCounter(QObject *parent = nullptr);
-	void clear();
-	//virtual int charCount() const;
-	//virtual int wordCount() const;
-
-	//void setWordCount(int);
-	//void setCharCount(int);
-	//QBindable<int> bindableWordCount();
-	//QBindable<int> bindableCharCount();
+	Q_INVOKABLE virtual void clear();
+	quint64 charCount() const;
+	quint64 wordCount() const;
+	State state() const;
 public slots:
-	virtual void push_word(const QString&);
+	virtual void push_text(const QString&);
 	virtual void push_char(const QChar&);
 signals:
 	void wordCountChanged();
 	void charCountChanged();
+	void stateChanged();
+protected:
+	inline virtual bool checkSeparator(const QChar&);
+	void setWordCount(quint64);
+	void setCharCount(quint64);
+	void setState(State);
 private:
+	Q_PROPERTY(quint64 wordCount READ wordCount NOTIFY wordCountChanged);
+	Q_PROPERTY(quint64 charCount READ charCount NOTIFY charCountChanged);
+	Q_PROPERTY(State state READ state NOTIFY stateChanged);
+
 	State _state;
-	//Q_OBJECT_BINDABLE_PROPERTY(WordCounter, int, _charCount, &WordCounter::charCountChanged);
-	//Q_OBJECT_BINDABLE_PROPERTY(WordCounter, int, _wordCount, &WordCounter::wordCountChanged);
-	QChar _lastChar;
+	quint64 _wordCount, _charCount;
 };
