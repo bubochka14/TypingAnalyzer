@@ -8,7 +8,7 @@ SettingsPage::SettingsPage(QQmlEngine* e, QObject* parent)
 }
 QStringList SettingsPage::headers() const
 {
-	return _addedSettings.keys();
+	return _headers;
 }
 
 QQuickItem* SettingsPage::getContent()
