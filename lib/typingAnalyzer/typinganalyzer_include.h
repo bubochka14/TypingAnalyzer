@@ -1,6 +1,6 @@
 #pragma once 
-#if defined(SHARED)
-#define TP_EXPORT __declspec(dllexport)
+#if(SHARED)
+#define TP_EXPORT  Q_DECL_IMPORT
 #else
-#define TP_EXPORT __declspec(dllimport)
+#define TP_EXPORT  Q_DECL_EXPORT
 #endif

@@ -1,6 +1,6 @@
-#include "application.h"
+#include "pageapplication.h"
 int main(int argc, char**argv)
 {
-    Application app(argc, argv);
-	return 0;
+    PageApplication app(argc, argv);
+	return app.exec();
 }

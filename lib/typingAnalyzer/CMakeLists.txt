@@ -21,6 +21,7 @@ set (CPP_SOURCES
 	"applicationsettings.h"
 	"applicationsettings.cpp"
 	"soundinterfaces.h"
+	"typinganalyzer_include.h"
 	"soundinterfaces.cpp"
     "pageapplication.h"
     "pageapplication.cpp"
