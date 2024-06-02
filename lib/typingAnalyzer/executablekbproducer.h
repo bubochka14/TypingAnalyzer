@@ -4,7 +4,9 @@
 #include "akeyboardinterceptor.h"
 #include "executable.h"
 #include "keyboardinterceptor.h"
-class ExecutableKBProducer : public Executable 
+#include "typinganalyzer_include.h"
+
+class TP_EXPORT ExecutableKBProducer : public Executable 
 {
 	Q_OBJECT;
 public:

@@ -5,6 +5,7 @@
 #include "namedobject.h"
 #include "functional"
 #include <QQuickItem>
+#include "typinganalyzer_include.h"
 // class AppSetting: public QObject
 // {
 // 	Q_OBJECT;
@@ -19,7 +20,7 @@
 // protected:
 // 	explicit AppSetting(QObject* parent = nullptr);
 // };
-class ApplicationSettings : public QSettings
+class TP_EXPORT ApplicationSettings : public QSettings
 {
 	Q_OBJECT;
 	Q_PROPERTY(QString language READ language WRITE setLanguage NOTIFY languageChanged);

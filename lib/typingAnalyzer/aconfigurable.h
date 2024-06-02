@@ -2,7 +2,8 @@
 #include <QObject>
 #include <QMetaEnum>
 #include <qvarianthash.h>
-class Config 
+#include "typinganalyzer_include.h"
+class TP_EXPORT Config
 {
 	Q_GADGET;
 public:
@@ -12,7 +13,7 @@ public:
 private:
 	QVariantHash _hash;
 };
-class IConfigurable
+class TP_EXPORT IConfigurable
 {
 	//Q_OBJECT;
 	//Q_PROPERTY(Config* config READ config WRITE setConfig NOTIFY configChanged)

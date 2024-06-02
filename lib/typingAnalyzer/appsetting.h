@@ -3,7 +3,8 @@
  #include "namedobject.h"
  #include <qqmlengine.h>
  #include "iqmlcontent.h"
-class AbstractAppSetting  :public NamedObject
+#include "typinganalyzer_include.h"
+class TP_EXPORT AbstractAppSetting  :public NamedObject
 {
 	Q_OBJECT;
 	QML_ELEMENT;

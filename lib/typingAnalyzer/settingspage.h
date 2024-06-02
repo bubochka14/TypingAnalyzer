@@ -3,7 +3,9 @@
 #include "appsetting.h"
 #include <qqmlengine.h>
 #include "contentbuilder.h"
-class SettingsPage : public AppPage
+#include "typinganalyzer_include.h"
+
+class TP_EXPORT SettingsPage : public AppPage
 {
 	Q_OBJECT;
 	Q_PROPERTY(QStringList headers READ headers NOTIFY headersChanged);

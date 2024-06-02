@@ -12,9 +12,10 @@
 #include "qproperty.h"
 #include "listsetting.h"
 #include "freemodepage.h"
-Q_DECLARE_LOGGING_CATEGORY(LC_PAGE_APP);	
+#include "typinganalyzer_include.h"
 
-class PageApplication : public Application
+Q_DECLARE_LOGGING_CATEGORY(LC_PAGE_APP);	
+class TP_EXPORT PageApplication : public Application
 {
 	Q_OBJECT;
 	QML_UNCREATABLE("");

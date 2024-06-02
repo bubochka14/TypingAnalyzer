@@ -8,7 +8,9 @@
 #include <qqmlcontext.h>
 #include "typingmeter.h"
 #include "executablekbproducer.h"
-class FreeModePage : public ExecutableAppPage
+#include "typinganalyzer_include.h"
+
+class TP_EXPORT FreeModePage : public ExecutableAppPage
 {
 	Q_OBJECT;
 	Q_PROPERTY(QList<typingRate> rates READ rates NOTIFY ratesChanged);

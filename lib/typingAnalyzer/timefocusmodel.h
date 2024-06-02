@@ -9,9 +9,11 @@
 #include <qqmlengine.h>
 #include <qvariant.h>
 #include "typingrate.h"
+#include "typinganalyzer_include.h"
+
 Q_DECLARE_LOGGING_CATEGORY(LC_TimeFocusModel);
 // Duration and RemainingTime is msec counter
-struct TimeFocusData
+struct TP_EXPORT TimeFocusData
 {
     Q_GADGET
 public:

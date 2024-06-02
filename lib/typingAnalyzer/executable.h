@@ -1,8 +1,9 @@
 #pragma once
 #include <qobject.h>
+#include "typinganalyzer_include.h"
 #include <qmetaenum>
 #include <QQMlEngine>
-class Executable : public QObject
+class TP_EXPORT Executable : public QObject
 {
 	Q_OBJECT;
 	QML_ELEMENT;
@@ -29,7 +30,7 @@ private:
 	Q_PROPERTY(State state READ state NOTIFY stateChanged);
 	State _state;
 };
-class ComplexExecutable : public Executable
+class TP_EXPORT ComplexExecutable : public Executable
 {
     Q_OBJECT;
     Q_PROPERTY(QList<Executable*> components READ components NOTIFY componentsChanged);

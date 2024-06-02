@@ -5,7 +5,9 @@
 #include "soundinterfaces.h"
 #include "typingmeter.h"
 #include "executablekbproducer.h"
-class TimeFocusExecutable : public Executable
+#include "typinganalyzer_include.h"
+
+class TP_EXPORT TimeFocusExecutable : public Executable
 {
 	Q_OBJECT;
 	Q_PROPERTY(quint32 decrementInterval READ decrementInterval WRITE setDecrementInterval NOTIFY decrementIntervalChanged);

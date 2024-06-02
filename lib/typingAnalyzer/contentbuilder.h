@@ -4,8 +4,10 @@
 #include <qqmlengine.h>
 #include <qqmlcontext.h>
 #include <qloggingcategory.h>
+#include "typinganalyzer_include.h"
+
 Q_DECLARE_LOGGING_CATEGORY(LC_CONTENT_BUILDER)
-class ContentBuilder
+class TP_EXPORT ContentBuilder
 {
 public:
 	explicit ContentBuilder(const QUrl& source,QQmlEngine* e);

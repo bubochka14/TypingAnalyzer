@@ -3,8 +3,9 @@
 #include "soundinterfaces.h"
 #include <qrandom.h>
 #include <QObject>
+#include "typinganalyzer_include.h"
 #include <qsoundeffect.h>
-class CustomPeriodProducer : public QObject, IConfigurable, IPeriodSoundProducer
+class TP_EXPORT CustomPeriodProducer : public QObject, IConfigurable, IPeriodSoundProducer
 {
 	Q_OBJECT;
 	Q_PROPERTY(double volume READ volume WRITE setVolume NOTIFY volumeChanged);

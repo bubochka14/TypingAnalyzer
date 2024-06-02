@@ -2,7 +2,9 @@
 #include "appsetting.h"
 #include <qqmlengine.h>
 #include "contentbuilder.h"
-class ListSetting : public AbstractAppSetting
+#include "typinganalyzer_include.h"
+
+class TP_EXPORT ListSetting : public AbstractAppSetting
 {
 	Q_OBJECT;
 	QML_ELEMENT;

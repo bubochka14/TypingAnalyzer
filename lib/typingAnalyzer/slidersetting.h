@@ -2,7 +2,9 @@
 #include <qobject.h>
 #include "appsetting.h"
 #include "contentbuilder.h"
-class SliderSetting : public AbstractAppSetting
+#include "typinganalyzer_include.h"
+
+class TP_EXPORT SliderSetting : public AbstractAppSetting
 {
 	Q_OBJECT;
 	Q_PROPERTY(int max READ max WRITE setMax NOTIFY maxChanged);

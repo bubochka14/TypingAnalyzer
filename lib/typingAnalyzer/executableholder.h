@@ -1,8 +1,10 @@
 #pragma once 
 #include <qobject.h>
 #include "executable.h"
+#include "typinganalyzer_include.h"
+
 //holds one active executable
-class ExecutableHolder : public QObject
+class TP_EXPORT ExecutableHolder : public QObject
 {
 	Q_OBJECT;
 	Q_PROPERTY(Executable* activeExecutable READ activeExecutable WRITE setActiveExecutable NOTIFY activeExecutableChanged);

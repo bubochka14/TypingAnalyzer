@@ -6,7 +6,9 @@
 #include "wordcounter.h"
 #include "keyboardinterceptor.h"
 #include "typingrate.h"
-class TypingMeter : public Executable
+#include "typinganalyzer_include.h"
+
+class TP_EXPORT TypingMeter : public Executable
 {
 	Q_OBJECT;
 	QML_ELEMENT;

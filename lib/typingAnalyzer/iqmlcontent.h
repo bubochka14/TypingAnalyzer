@@ -2,7 +2,9 @@
 #include <qqmlengine.h>
 #include <QObject>
 #include <qquickitem.h>
-class IQmlContent
+#include "typinganalyzer_include.h"
+
+class TP_EXPORT IQmlContent
 {
 public:
 

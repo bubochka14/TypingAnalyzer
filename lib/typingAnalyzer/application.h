@@ -3,7 +3,8 @@
 #include "applicationsettings.h"
 #include "executable.h"
 #include "soundinterfaces.h"
-class Application: public QObject
+#include "typinganalyzer_include.h"
+class TP_EXPORT Application: public QObject
 {
     Q_OBJECT;
     Q_PROPERTY(IKBSoundProducer* kbProd READ kbProd WRITE setKbProd NOTIFY kbProdChanged);

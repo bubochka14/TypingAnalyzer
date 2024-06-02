@@ -2,7 +2,9 @@
 #include <QObject>
 #include <keyevent.h>
 #include <qqmlengine.h>
-struct  PeriodInfo
+#include "typinganalyzer_include.h"
+
+struct TP_EXPORT PeriodInfo
 {
 	Q_GADGET;
 	QML_ELEMENT;
@@ -21,7 +23,7 @@ public:
 };
 uint qHash(const PeriodInfo& item);
 bool operator==(const PeriodInfo& p1, const PeriodInfo& p2);
-class IPeriodSoundProducer
+class TP_EXPORT IPeriodSoundProducer
 {
 public:
 
@@ -32,7 +34,7 @@ public:
 };
 Q_DECLARE_INTERFACE(IPeriodSoundProducer,"Period sound producer interface")
 Q_DECLARE_METATYPE(IPeriodSoundProducer*)
-class IKBSoundProducer
+class TP_EXPORT IKBSoundProducer
 {
 public:
 	virtual bool produceSound(const KeyEvent&) = 0;

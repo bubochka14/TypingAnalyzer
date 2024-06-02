@@ -10,6 +10,7 @@ foreach(file IN LISTS ABS_QML_SOURCES)
 	list(APPEND QML_SOURCES ${QML_SOURCE})
 endforeach()
 #set(QT_QML_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/qml)
+
 set (CPP_SOURCES 
 	"wordcounter.h" 
 	"wordcounter.cpp" 
@@ -64,18 +65,24 @@ set (CPP_SOURCES
 	"executableholder.h" 
 	"executableholder.cpp"
 )
-QT_ADD_QML_MODULE(TypingAnalyzer STATIC
-	URI "TypingAnalyzer"
-	PLUGIN_TARGET "TypingAnalyzer"
+set(LIB_NAME "TypingAnalyzer")
+QT_ADD_QML_MODULE(${LIB_NAME} STATIC
+	URI ${LIB_NAME}
 	SOURCES ${CPP_SOURCES}
 	QML_FILES ${QML_SOURCES}
 )
-target_include_directories(TypingAnalyzer PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-if (CMAKE_VERSION VERSION_GREATER 3.щл12)
-	set_property(TARGET TypingAnalyzer PROPERTY CXX_STANDARD 20)
+target_compile_definitions(${LIB_NAME} INTERFACE 	
+	LIB_NAME=${LIB_NAME} 
+	SHARED=false
+)
+target_include_directories(${LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
+if (CMAKE_VERSION VERSION_GREATER 3.12)
+	set_property(TARGET ${LIB_NAME} PROPERTY CXX_STANDARD 20)
+	set_property(TARGET ${LIB_NAME} PROPERTY CXX_STANDARD_REQUIRED TRUE
+)
 endif()
-target_link_libraries(TypingAnalyzer PRIVATE 
-	Qt6::Core 
+target_link_libraries(${LIB_NAME} PRIVATE 
+	Qt6::Core
 	Qt6::Qml 
     Qt6::Gui
 	Qt6::Charts

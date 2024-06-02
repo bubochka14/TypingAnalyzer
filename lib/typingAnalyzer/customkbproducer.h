@@ -4,8 +4,9 @@
 #include <QUrl>
 #include <qsoundeffect.h>
 #include <qrandom.h>
+#include "typinganalyzer_include.h"
 
-struct KeyInfo
+struct TP_EXPORT KeyInfo
 {
 	Q_GADGET;
 public:
@@ -20,7 +21,7 @@ public:
 };
 uint qHash(const KeyInfo& item);
 inline bool operator==(const KeyInfo& i1, const KeyInfo& i2);
-class CustomKBProducer : public QObject, IConfigurable, IKBSoundProducer
+class TP_EXPORT CustomKBProducer : public QObject, IConfigurable, IKBSoundProducer
 {
 	Q_OBJECT;
 	Q_PROPERTY(double volume READ volume WRITE setVolume NOTIFY volumeChanged);

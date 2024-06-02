@@ -1,7 +1,9 @@
 #pragma once
 #include <qobject.h>
 #include <qqmlengine.h>
-struct typingRate
+#include "typinganalyzer_include.h"
+
+struct TP_EXPORT typingRate
 {
 	explicit typingRate();
 	void reset();

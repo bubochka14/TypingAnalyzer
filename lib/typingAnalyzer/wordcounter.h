@@ -3,8 +3,9 @@
 #include <QQmlEngine>
 #include "KeyboardInterceptor.h"
 #include <QObjectBindableProperty>
+#include "typinganalyzer_include.h"
 
-class WordCounter : public QObject
+class TP_EXPORT WordCounter : public QObject
 {
 	Q_OBJECT;
 	QML_UNCREATABLE("")

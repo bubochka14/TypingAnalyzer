@@ -7,9 +7,10 @@
 #include "executable.h"
 #include "appsetting.h"
 #include <qloggingcategory.h>
+#include "typinganalyzer_include.h"
 Q_DECLARE_LOGGING_CATEGORY(LC_AAPPAGE);
 
-class AppPage : public NamedObject
+class TP_EXPORT AppPage : public NamedObject
 {
 	Q_OBJECT;	
 	QML_ELEMENT;
@@ -27,7 +28,7 @@ signals:
 private:
 	QUrl _iconSource;
 };
-class ExecutableAppPage : public AppPage
+class TP_EXPORT ExecutableAppPage : public AppPage
 {
 	Q_OBJECT;
 	QML_ELEMENT;

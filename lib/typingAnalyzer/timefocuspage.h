@@ -11,7 +11,7 @@
 #include "listsetting.h"
 #include <qquickitem.h>
 #include "application.h"
-class TimeFocusPage : public ExecutableAppPage
+class TP_EXPORT TimeFocusPage : public ExecutableAppPage
 {
 	Q_OBJECT;
 	Q_PROPERTY(TimeFocusModel* model READ model NOTIFY modelChanged);

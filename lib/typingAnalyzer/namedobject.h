@@ -1,7 +1,9 @@
 #pragma once
 #include <qobject.h>
 #include <qqmlengine.h>
-class NamedObject : public QObject
+#include "typinganalyzer_include.h"
+
+class TP_EXPORT NamedObject : public QObject
 {
 	Q_OBJECT;
 	QML_ELEMENT;

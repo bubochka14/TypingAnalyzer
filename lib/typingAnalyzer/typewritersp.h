@@ -5,7 +5,9 @@
 #include <qrandom.h>
 #include <QDebug>
 #include <qqmlengine.h>
-class TypeWriterSP : public QObject, IKBSoundProducer
+#include "typinganalyzer_include.h"
+
+class TP_EXPORT TypeWriterSP : public QObject, IKBSoundProducer
 {
 	QML_ELEMENT;
 	Q_OBJECT;
