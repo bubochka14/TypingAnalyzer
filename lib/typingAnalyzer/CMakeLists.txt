@@ -67,13 +67,24 @@ set (CPP_SOURCES
 	"executableholder.cpp"
 )
 set(LIB_NAME "TypingAnalyzer")
+set(RESOURCES 
+	"resources/pics/chart.svg"
+	"resources/pics/coffee.svg"
+	"resources/pics/completed.svg"
+	"resources/pics/menu.png"
+	"resources/pics/settings.svg"
+	"resources/pics/typewriter.png"
+)
 QT_ADD_QML_MODULE(${LIB_NAME} STATIC
 	URI ${LIB_NAME}
+	PLUGIN_TARGET ${LIB_NAME}
 	SOURCES ${CPP_SOURCES}
 	QML_FILES ${QML_SOURCES}
+	RESOURCES 	${RESOURCES}
+
 )
-target_compile_definitions(${LIB_NAME} INTERFACE 	
-	LIB_NAME=${LIB_NAME} 
+target_compile_definitions(${LIB_NAME} PRIVATE 	
+	LIB_NAME="${LIB_NAME}" 
 	SHARED=false
 )
 target_include_directories(${LIB_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
