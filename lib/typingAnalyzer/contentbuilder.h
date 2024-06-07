@@ -13,6 +13,7 @@ public:
 	explicit ContentBuilder(QQmlEngine* e);
 	void setInitialProperties(const QVariantMap& pr);
 	void setInitialProperties(const QString&name, QObject* p);
+	void addContextPointer(const QString& name, QObject* p);
 	void setEngine(QQmlEngine* engine);
 	QQuickItem* build(const QString& module, const QString& item);
 	QQuickItem* build(const QUrl& source);

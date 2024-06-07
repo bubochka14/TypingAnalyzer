@@ -5,6 +5,10 @@ ContentBuilder::ContentBuilder(QQmlEngine* e)
 	,_engine(e)
 {
 }
+void ContentBuilder::addContextPointer(const QString& name, QObject* p)
+{
+	_context->setContextProperty(name, p);
+}
 void ContentBuilder::setInitialProperties(const QVariantMap& pr)
 {
 	_init = pr;
@@ -22,7 +26,7 @@ QQuickItem* ContentBuilder::build(const QUrl& source)
 {
 	QQmlComponent comp(_engine, source,
 		QQmlComponent::PreferSynchronous);
-	QObject* obj = comp.createWithInitialProperties(_init);
+	QObject* obj = comp.createWithInitialProperties(_init,_context);
 	if (comp.isError())
 	{
 		qCritical(LC_CONTENT_BUILDER) << "Error while creating content" << ": " << comp.errors();
@@ -36,7 +40,7 @@ QQuickItem* ContentBuilder::build(const QString& module, const QString& item)
 {
 	QQmlComponent comp(_engine,module,item,
 		QQmlComponent::PreferSynchronous);
-	QObject* obj = comp.createWithInitialProperties(_init);
+	QObject* obj = comp.createWithInitialProperties(_init,_context);
 	if (comp.isError())
 	{
 		qCritical(LC_CONTENT_BUILDER) << "Error while creating content" << ": " << comp.errors();
