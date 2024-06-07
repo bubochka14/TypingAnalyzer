@@ -11,7 +11,7 @@ MainWindow {
     visible: true
     SystemTrayIcon {
         visible: true
-        icon.source: Qt.resolvedUrl("icons/chart.svg")
+        icon.source: Qt.resolvedUrl("resources/icons/chart.svg")
         menu: Menu {
             MenuItem {
                 text: qsTr("Quit")

@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls 6.2
 import QtQuick.Layouts
-import KeyboardAnalyzer
+import TypingAnalyzer
 import QtMultimedia
 
 Page {
@@ -171,13 +171,13 @@ Page {
                     sourceSize.width: 100
                     source: {
                         if (completed)
-                            source: Qt.resolvedUrl("pics/completed")
+                            source: Qt.resolvedUrl("resources/pics/completed")
                         else if (type === PeriodInfo.Break)
-                            source: Qt.resolvedUrl("pics/coffee")
+                            source: Qt.resolvedUrl("resources/pics/coffee")
                         else if (type === PeriodInfo.Work)
-                            source: Qt.resolvedUrl("pics/typewriter")
+                            source: Qt.resolvedUrl("resources/pics/typewriter")
                         else
-                            source: Qt.resolvedUrl("pics/typewriter")
+                            source: Qt.resolvedUrl("resources/pics/typewriter")
                     }
                     anchors{
                         horizontalCenter: parent.horizontalCenter

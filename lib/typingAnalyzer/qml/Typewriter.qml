@@ -3,7 +3,7 @@ import QtQuick.Controls
 Image {
     property date timeInterval
     property alias durationSring: textField.text
-    source: Qt.resolvedUrl("pics/typewriter")
+    source: Qt.resolvedUrl("resources/pics/typewriter")
     sourceSize.height: 100
     sourceSize.width: 100
  TextField  {
