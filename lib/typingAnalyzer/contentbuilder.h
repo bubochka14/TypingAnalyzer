@@ -10,15 +10,14 @@ Q_DECLARE_LOGGING_CATEGORY(LC_CONTENT_BUILDER)
 class TP_EXPORT ContentBuilder
 {
 public:
-	explicit ContentBuilder(const QUrl& source,QQmlEngine* e);
-	void addContextPointer(const QString& name, QObject* p);
-	void setSource(const QUrl& url);
+	explicit ContentBuilder(QQmlEngine* e);
+	void setInitialProperties(const QVariantMap& pr);
+	void setInitialProperties(const QString&name, QObject* p);
 	void setEngine(QQmlEngine* engine);
-	void setParent(QObject* parent);
-	QQuickItem* build();
+	QQuickItem* build(const QString& module, const QString& item);
+	QQuickItem* build(const QUrl& source);
 private:
 	QQmlContext* _context;
 	QQmlEngine* _engine;
-	QUrl _source;
-	QObject* _parent;
+	QVariantMap _init;
 };

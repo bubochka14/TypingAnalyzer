@@ -1,32 +1,42 @@
 #include "contentbuilder.h"
 Q_LOGGING_CATEGORY(LC_CONTENT_BUILDER,"Content Builder")
-ContentBuilder::ContentBuilder(const QUrl& source, QQmlEngine* e)
-	:_source(source)
-	,_context(new QQmlContext(e,e))
+ContentBuilder::ContentBuilder(QQmlEngine* e)
+	:_context(new QQmlContext(e,e))
 	,_engine(e)
 {
 }
-void ContentBuilder::addContextPointer(const QString& name, QObject* p)
+void ContentBuilder::setInitialProperties(const QVariantMap& pr)
 {
-	_context->setContextProperty(name, p);
-}
-void ContentBuilder::setSource(const QUrl& url)
-{
-	_engine->setBaseUrl(url);
+	_init = pr;
 }
 void ContentBuilder::setEngine(QQmlEngine* engine)
 {
 	_engine = engine;
 }
-void  ContentBuilder::setParent(QObject* parent)
+void ContentBuilder::setInitialProperties(const QString& name, QObject* p)
 {
-	_parent = parent;
+	_init = { {name, QVariant::fromValue(p)} };
 }
-QQuickItem* ContentBuilder::build()
+
+QQuickItem* ContentBuilder::build(const QUrl& source)
 {
-	QQmlComponent comp(_engine, _source,
+	QQmlComponent comp(_engine, source,
 		QQmlComponent::PreferSynchronous);
-	QObject* obj = comp.create(_context);
+	QObject* obj = comp.createWithInitialProperties(_init);
+	if (comp.isError())
+	{
+		qCritical(LC_CONTENT_BUILDER) << "Error while creating content" << ": " << comp.errors();
+		return nullptr;
+	}
+	else
+		return (QQuickItem*)obj;
+}
+
+QQuickItem* ContentBuilder::build(const QString& module, const QString& item)
+{
+	QQmlComponent comp(_engine,module,item,
+		QQmlComponent::PreferSynchronous);
+	QObject* obj = comp.createWithInitialProperties(_init);
 	if (comp.isError())
 	{
 		qCritical(LC_CONTENT_BUILDER) << "Error while creating content" << ": " << comp.errors();
