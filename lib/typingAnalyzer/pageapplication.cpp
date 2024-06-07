@@ -9,7 +9,6 @@ PageApplication::PageApplication(int argc, char**argv)
     addPage(new FreeModePage(this, _engine, this));
 	setupSettings();
 	_qApp.setQuitOnLastWindowClosed(false);
-	_engine->rootContext()->setContextProperty("app", this);
 }
 void PageApplication::addPage(AppPage* other)
 {
@@ -58,7 +57,8 @@ QList<AppPage*> PageApplication::pages() const
 
 int PageApplication::exec()
 {
-	//todo: qmlengine error handling 
-	_engine->load(":/components/Main.qml");
+	ContentBuilder builder(_engine);
+	builder.addContextPointer("app", this);
+	builder.build(LIB_NAME, "Main");
 	return _qApp.exec();
 }

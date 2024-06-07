@@ -3,9 +3,7 @@ SettingsPage::SettingsPage(QQmlEngine* e, QObject* parent)
 	:AppPage("Settings",parent)
 	,_engine(e)
 	,_content(nullptr)
-{
-	setIconSource(QUrl("qrc:/components/icons/settings"));
-}
+{}
 QStringList SettingsPage::headers() const
 {
 	return _headers;
@@ -15,9 +13,9 @@ QQuickItem* SettingsPage::getContent()
 {
 	if (!_content)
 	{
-		ContentBuilder builder(QUrl("qrc:/components/SettingsPage.qml"), _engine);
-		builder.addContextPointer("settingsPage", (QObject*)this);
-		_content = builder.build();
+		ContentBuilder builder(_engine);
+		builder.addContextPointer("settingsPage", this);
+		_content = builder.build(LIB_NAME, "SettingsPage");
 	}
 	return _content;
 }

@@ -11,8 +11,6 @@ FreeModePage::FreeModePage(Application* a, QQmlEngine* e, QObject* parent)
     _typingMeter = new TypingMeter(kInter,this);
     _freeModeExecutable->addComponent(_eKbProd);
     _freeModeExecutable->addComponent(_typingMeter);
-
-	setIconSource(QUrl("qrc:/components/icons/chart"));
     connect(_typingMeter, &TypingMeter::ratesChanged,this, &FreeModePage::ratesChanged);
     connect(_app, &Application::kbProdChanged, this, [=]() {_eKbProd->setKBSoundProducer(_app->kbProd()); });
 }
@@ -22,9 +20,9 @@ QQuickItem* FreeModePage::getContent()
 {
     if(_content==nullptr)
     {
-        ContentBuilder builder(QUrl("qrc:/components/FreeModePage.qml"),_engine);
-        builder.addContextPointer("freeModePage",(QObject*)this);
-        _content = builder.build();
+        ContentBuilder builder(_engine);
+        builder.addContextPointer("freeModePage", this);
+        _content = builder.build(LIB_NAME, "FreeModePage");
     }
 	return _content;
 }

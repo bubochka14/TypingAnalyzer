@@ -33,13 +33,13 @@ QQuickItem* ListSetting::getContent()
 {
 	if (!_content)
 	{
-		ContentBuilder builder(QUrl("qrc:/components/ui/UIComboBox.qml"), _engine);
-		builder.addContextPointer("listSetting", (QObject*)this);
-		_content = builder.build();
+		ContentBuilder builder(_engine);
+		_content = builder.build(LIB_NAME,"UIComboBox");
 		_content->setProperty("model", _varHash.keys());
 		connect(_content, SIGNAL(currentTextChanged()), this, SLOT(handleTextChange()));
 	}
 	return _content;
+
 }
 void ListSetting::addOption(const QString& optionName, const QVariant& var)
 {

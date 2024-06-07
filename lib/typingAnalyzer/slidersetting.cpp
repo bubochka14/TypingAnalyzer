@@ -47,12 +47,9 @@ QQuickItem* SliderSetting::getContent()
 {
 	if (!_content)
 	{
-		ContentBuilder builder(QUrl("qrc:/components/ui/UISlider.qml"), _engine);
-		builder.addContextPointer("listSetting", (QObject*)this);
-		_content = builder.build();
-		_content->setProperty("value", _value);
-		_content->setProperty("min", _min);
-		_content->setProperty("max", _max);
+		ContentBuilder builder(_engine);
+		builder.setInitialProperties({ {"value",_value},{"from",_min},{"to",_max} });
+		_content = builder.build(LIB_NAME,"UISlider");
 		connect(_content, SIGNAL(valueChanged()), this, SLOT(handleValueChange()));
 	}
 	return _content;

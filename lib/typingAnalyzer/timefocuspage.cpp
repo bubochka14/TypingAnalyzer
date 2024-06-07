@@ -24,7 +24,6 @@ TimeFocusPage::TimeFocusPage(Application* app, QQmlEngine* e, QObject* parent)
 		});
 	
 	connect(_app, &Application::kbProdChanged, this, [=]() {_ex->setKbProd(_app->kbProd()); });
-	setIconSource(QUrl("qrc:/components/pics/coffee"));
 }
 Executable* TimeFocusPage::executable() const
 {
@@ -42,9 +41,9 @@ QQuickItem* TimeFocusPage::getContent()
 {
 	if (!_content)
 	{
-		ContentBuilder builder(QUrl("qrc:/components/TimeFocusPage.qml"), _engine);
+		ContentBuilder builder(_engine);
 		builder.addContextPointer("timeFocusPage", this);
-		_content = builder.build();
+		_content = builder.build(LIB_NAME,"TimeFocusPage");
 	}
 	return _content;
 }
