@@ -16,3 +16,4 @@ qt_policy(SET QTP0001 NEW)
 
 add_subdirectory ("src")
 add_subdirectory ("lib")
+add_subdirectory("tests")
