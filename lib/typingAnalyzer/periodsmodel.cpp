@@ -1,18 +1,18 @@
-#include "timefocusmodel.h"
-Q_LOGGING_CATEGORY(LC_TimeFocusModel, "TimeFocusModel");
+#include "PeriodsModel.h"
+Q_LOGGING_CATEGORY(LC_PERIODSMODEL, "PeriodsModel");
 
-QHash<int, QByteArray> TimeFocusModel::_roles = { 
+QHash<int, QByteArray> PeriodsModel::_roles = { 
     {Duration,"duration"},
     {Type,"type"}, 
     {RemainingTime, "remainingTime"},
-    {Completed,"completed"},
+    {PeriodState,"periodState"},
     {Rates,"rates"}
 };
-TimeFocusModel::TimeFocusModel(QObject *parent)
+PeriodsModel::PeriodsModel(QObject *parent)
     : QAbstractListModel{parent}
 {
 }
-bool TimeFocusModel::setData(const QModelIndex& index, const QVariant& value, int role ) 
+bool PeriodsModel::setData(const QModelIndex& index, const QVariant& value, int role ) 
 {
     if (index.isValid() && index.row() < rowCount() && index.row() >= 0)
     {
@@ -28,10 +28,10 @@ bool TimeFocusModel::setData(const QModelIndex& index, const QVariant& value, in
             return false;
         _data[index.row()].remainingTime = value.value<quint64>();
         break;
-    case Completed:
-        if (!value.canConvert<bool>())
+    case PeriodState:
+        if (!value.canConvert<PeriodStates>())
             return false;
-        _data[index.row()].completed = value.value<bool>();
+        _data[index.row()].periodState = value.value<PeriodStates>();
         break;
     case Type:
         if (!value.canConvert< PeriodInfo::PeriodType>())
@@ -49,11 +49,11 @@ bool TimeFocusModel::setData(const QModelIndex& index, const QVariant& value, in
     }
     return false;
 }
-bool TimeFocusModel::clear()
+bool PeriodsModel::clear()
 {
    return removeRows(0, rowCount());
 }
-QVariant TimeFocusModel::data(const QModelIndex& index, int role) const 
+QVariant PeriodsModel::data(const QModelIndex& index, int role) const 
 {
     if (index.isValid() && index.row() < _data.size() && index.row() >= 0)
     {
@@ -63,8 +63,8 @@ QVariant TimeFocusModel::data(const QModelIndex& index, int role) const
             return _data.at(index.row()).duration;
         case RemainingTime:
             return _data.at(index.row()).remainingTime;
-        case Completed:
-            return _data.at(index.row()).completed;
+        case PeriodState:
+            return _data.at(index.row()).periodState;
         case Type:
             return _data.at(index.row()).type;
         case Rates:
@@ -73,16 +73,16 @@ QVariant TimeFocusModel::data(const QModelIndex& index, int role) const
     }
     return QVariant();
 }
-QHash<int, QByteArray> TimeFocusModel::roleNames() const
+QHash<int, QByteArray> PeriodsModel::roleNames() const
 {
     return _roles;
 }
-int TimeFocusModel::rowCount(const QModelIndex& parent) const 
+int PeriodsModel::rowCount(const QModelIndex& parent) const 
 {
     Q_UNUSED(parent);
     return _data.size();
 }
-bool TimeFocusModel::insertRows(int row, int count, const QModelIndex& parent) 
+bool PeriodsModel::insertRows(int row, int count, const QModelIndex& parent) 
 {
     Q_UNUSED(parent);
     if (!count)
@@ -91,11 +91,11 @@ bool TimeFocusModel::insertRows(int row, int count, const QModelIndex& parent)
         return false;
 
     beginInsertRows(parent, row, row + count - 1);
-        _data.insert(row,count, TimeFocusData());
+        _data.insert(row,count, PeriodData());
     endInsertRows();
     return true;
 }
-bool TimeFocusModel::removeRows(int row, int count, const QModelIndex& parent)
+bool PeriodsModel::removeRows(int row, int count, const QModelIndex& parent)
 {
     Q_UNUSED(parent);
     if (!count)

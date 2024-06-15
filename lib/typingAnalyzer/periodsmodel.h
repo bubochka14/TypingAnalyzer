@@ -1,5 +1,4 @@
-#ifndef TIMEFOCUSMODEL_H
-#define TIMEFOCUSMODEL_H
+#pragma once
 
 #include <QAbstractListModel>
 #include <QTime>
@@ -11,34 +10,28 @@
 #include "typingrate.h"
 #include "typinganalyzer_include.h"
 
-Q_DECLARE_LOGGING_CATEGORY(LC_TimeFocusModel);
-// Duration and RemainingTime is msec counter
-struct TP_EXPORT TimeFocusData
-{
-    Q_GADGET
-public:
-    qint64 duration;
-    qint64 remainingTime;
-    bool completed;
-    PeriodInfo::PeriodType type;
-    RateList rates;
-
-};
-class TimeFocusModel : public QAbstractListModel
+Q_DECLARE_LOGGING_CATEGORY(LC_PERIODSMODEL);
+class PeriodsModel : public QAbstractListModel
 {
     Q_OBJECT;
     QML_ELEMENT
     QML_SINGLETON
 public:
+    enum PeriodStates
+    {
+        Inactive,
+        Active,
+        Completed
+    }; Q_ENUM(PeriodStates);
     enum Roles
     {
         Duration = Qt::UserRole,
         RemainingTime,
-        Completed,
+        PeriodState,
         Rates,
         Type
     }; Q_ENUM(Roles)
-    explicit TimeFocusModel(QObject* parent = nullptr);
+    explicit PeriodsModel(QObject* parent = nullptr);
 
     Q_INVOKABLE bool clear();
     bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
@@ -47,11 +40,20 @@ public:
     int rowCount(const QModelIndex& parent = QModelIndex()) const override;	
     bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
     bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) override;
-private:
+protected:  
+    //Data field in model
+    struct TP_EXPORT PeriodData
+    {
+        Q_GADGET
+    public:
+        qint64 duration;
+        qint64 remainingTime;
+        PeriodStates periodState;
+        PeriodInfo::PeriodType type;
+        RateList rates;
 
-    inline static TimeFocusModel* _p_inst = nullptr;
-    QVector<TimeFocusData> _data;
+    };
+private:
+    QVector<PeriodData> _data;
     static QHash<int, QByteArray> _roles;
 };
-
-#endif // TIMEFOCUSMODEL_H
