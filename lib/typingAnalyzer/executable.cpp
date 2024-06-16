@@ -1,17 +1,32 @@
 #include "executable.h"
 Executable::Executable(QObject* parent) :QObject(parent),_state(NotStarted) {}
 Executable::State Executable::state() const { return _state; }
-void Executable::start() { setState(Started); }
-void Executable::stop() { setState(Stopped); }
-void Executable::finish() { setState(Finished); }
-
-void Executable::setState(State other)
+void Executable::start() 
 {
-	if (other == _state)
-		return;
-	_state = other;
-	emit stateChanged();
+    if (_state != Started)
+    {
+        _state = Started;
+        emit started();
+    }
 }
+void Executable::stop() 
+{ 
+    if (_state != Stopped)
+    {
+        _state = Stopped;
+        emit stopped();
+    }
+
+}
+void Executable::finish() 
+{ 
+    if(_state != Finished)
+    {
+        _state = Finished;
+        emit finished();
+    }
+}
+
 ComplexExecutable::ComplexExecutable(QObject* parent)
     :Executable(parent)
 {
@@ -35,6 +50,7 @@ void ComplexExecutable::start()
     {
         i->start();
     }
+    Executable::start();
 }
 void ComplexExecutable::stop()
 {
@@ -42,6 +58,7 @@ void ComplexExecutable::stop()
     {
         i->stop();
     }
+    Executable::stop();
 }
 void ComplexExecutable::finish()
 {
@@ -49,4 +66,6 @@ void ComplexExecutable::finish()
     {
         i->finish();
     }
+    Executable::finish();
+
 }

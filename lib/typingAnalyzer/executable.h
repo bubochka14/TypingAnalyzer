@@ -23,9 +23,10 @@ public slots:
 	virtual void stop();
 	virtual void finish();
 signals:
+	void finished();
+	void stopped();
+	void started();
 	void stateChanged();
-protected:
-	void setState(State other);
 private:
 	Q_PROPERTY(State state READ state NOTIFY stateChanged);
 	State _state;
