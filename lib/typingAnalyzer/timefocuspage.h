@@ -1,8 +1,8 @@
 #pragma once
 #include "apppage.h"
-#include "timefocusexecutable.h"
+#include "perioddecrementer.h"
 #include "contentbuilder.h"
-#include "timefocusmodel.h"
+#include "periodsmodel.h"
 #include "slidersetting.h"
 #include <qquickitem.h>
 #include "typewritersp.h"
@@ -14,23 +14,19 @@
 class TP_EXPORT TimeFocusPage : public ExecutableAppPage
 {
 	Q_OBJECT;
-	Q_PROPERTY(TimeFocusModel* model READ model NOTIFY modelChanged);
-	Q_PROPERTY(quint16 activeIndex READ activeIndex NOTIFY activeIndexChanged)
+	Q_PROPERTY(PeriodsModel* model READ model NOTIFY modelChanged);
 public:
     explicit TimeFocusPage(Application* app, QQmlEngine* e, QObject* parent=nullptr);
-	void setModel(TimeFocusModel*);
-	TimeFocusModel* model() const;
+	void setModel(PeriodsModel*);
+	PeriodsModel* model() const;
 	Executable* executable() const override;
 	QQuickItem* getContent() override;
-	QList<AbstractAppSetting*> settings() const override;
-	quint16 activeIndex() const;
-
+	QList<DisplayedSetting*> settings() const override;
 signals:
 	void modelChanged();
-	void activeIndexChanged();
 private:
-	TimeFocusModel* _model;
-	TimeFocusExecutable* _ex;
+	PeriodsModel* _model;
+	PeriodDecrementer* _ex;
 	QQuickItem* _content;
     Application* _app;
 	QQmlEngine* _engine;

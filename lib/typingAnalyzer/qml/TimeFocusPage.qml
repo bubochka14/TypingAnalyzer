@@ -8,7 +8,8 @@ import QtMultimedia
 Page {
     id: root
     property alias timePanel: tfPanel
-    readonly property TimeFocusModel model: timeFocusPage.model
+    required property Executable tfAlg
+    required property PeriodsModel model
     Item {
         id: convert
         function toMiliseconds(h = 0, m = 0, s = 0, ms = 0) {
@@ -21,39 +22,40 @@ Page {
             return hours + "h " + mins + "m " + (s ? (s + "s") : "")
         }
     }
-    Component.onCompleted: root.apply()
+    Component.onCompleted: {root.apply(); }
     state: {
-        var state = timeFocusPage.executable.state
+        var state = tfAlg.state
         if (state == Executable.Finished || state == Executable.NotStarted)
             return "NotStarted"
         else
             return "Started"
     }
     function apply() {
+        console.log(model)
         model.clear()
-        if (TimeFocusPanel.repeatCount == 0)
+        if (tfPanel.repeatCount == 0)
             return
         model.insertRows(0, timePanel.repeatCount * 2 - 1)
         var workMs = timePanel.workDuration
         var breakMs = timePanel.breakDuration
 
         for (var i = 0; i < timePanel.repeatCount * 2 - 1; i += 2) {
-            model.setData(model.index(i, 0), workMs, TimeFocusModel.Duration)
+            model.setData(model.index(i, 0), workMs, PeriodsModel.Duration)
             model.setData(model.index(i, 0), workMs,
-                          TimeFocusModel.RemainingTime)
-            model.setData(model.index(i, 0), 0, TimeFocusModel.Completed)
+                          PeriodsModel.RemainingTime)
+            model.setData(model.index(i, 0), 0, PeriodsModel.Completed)
             model.setData(model.index(i, 0), PeriodInfo.Work,
-                          TimeFocusModel.Type)
+                          PeriodsModel.Type)
             if (i != timePanel.repeatCount * 2 - 1) {
                 // skip last break
                 model.setData(model.index(i + 1, 0), breakMs,
-                              TimeFocusModel.Duration)
+                              PeriodsModel.Duration)
                 model.setData(model.index(i + 1, 0), breakMs,
-                              TimeFocusModel.RemainingTime)
+                              PeriodsModel.RemainingTime)
                 model.setData(model.index(i + 1, 0), 0,
-                              TimeFocusModel.Completed)
+                              PeriodsModel.Completed)
                 model.setData(model.index(i + 1, 0), PeriodInfo.Break,
-                              TimeFocusModel.Type)
+                              PeriodsModel.Type)
             }
         }
     }
@@ -160,8 +162,9 @@ Page {
                             ScriptAction{script: image.rotation =0}
                         }
                     ]
+                    Component.onCompleted: console.log(periodState)
                     state: {
-                        if (!completed && timeFocusPage.activeIndex == index
+                        if (periodState == PeriodsModel.Active
                                 && root.state == "Started")
                             return "ACTIVE"
                         else
@@ -170,7 +173,7 @@ Page {
                     sourceSize.height: 100
                     sourceSize.width: 100
                     source: {
-                        if (completed)
+                        if (periodState == PeriodsModel.Completed)
                             source: Qt.resolvedUrl("resources/pics/completed")
                         else if (type === PeriodInfo.Break)
                             source: Qt.resolvedUrl("resources/pics/coffee")
@@ -185,7 +188,7 @@ Page {
                         topMargin: 15
                     }
                     MouseArea {
-                        enabled: (rates.length && completed) ? true : false
+                        enabled: (rates.length && periodState==PeriodsModel.Completed) ? true : false
                         anchors.fill: parent
                         cursorShape: enabled ? Qt.PointingHandCursor : Qt.ArrowCursor
                         onClicked: statsDial.showRates(rates)
@@ -194,10 +197,10 @@ Page {
                 Label {
                     font.pixelSize: 14
                     text: {
-                        if (completed)
+                        if (periodState == PeriodsModel.Completed)
                             text: "Completed " + rates[rates.length - 1].charCount
                         else
-                            text: convert.msToStr(remainingTime)
+                            text: convert.msToStr(remainingTime) + periodState
                     }
                     anchors{
                         horizontalCenter: parent.horizontalCenter
@@ -216,7 +219,7 @@ Page {
                 text: "Accept"
                 focus: true
                 onClicked: {
-                    timeFocusPage.executable.start()
+                    tfAlg.start()
                 }
             }
             Button {
@@ -224,7 +227,7 @@ Page {
                 text: "Stop"
                 enabled: false
                 onClicked: {
-                    timeFocusPage.executable.finish()
+                    tfAlg.finish()
                 }
             }
         }

@@ -19,7 +19,7 @@ QQuickItem* SettingsPage::getContent()
 	}
 	return _content;
 }
-void SettingsPage::addSetting(AbstractAppSetting* s, const QString& header)
+void SettingsPage::addSetting(DisplayedSetting* s, const QString& header)
 {
 	if(!_addedSettings.contains(header))
 	{
@@ -29,7 +29,7 @@ void SettingsPage::addSetting(AbstractAppSetting* s, const QString& header)
 	}else 
 		_addedSettings[header].append(s);
 }
-QList<AbstractAppSetting*> SettingsPage::addedSettings(const QString& header) const
+QList<DisplayedSetting*> SettingsPage::addedSettings(const QString& header) const
 {
 	return _addedSettings[header];
 }

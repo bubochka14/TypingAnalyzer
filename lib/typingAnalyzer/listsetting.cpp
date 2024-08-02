@@ -1,6 +1,6 @@
 #include "listsetting.h"
 ListSetting::ListSetting(const QString& name, QObject* parent)
-	:AbstractAppSetting(name,parent)
+	:DisplayedSetting(name,parent)
 	,_engine(new QQmlEngine(this))
 	,_content(nullptr)
 {

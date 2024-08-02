@@ -28,7 +28,7 @@ void PageApplication::setupSettings()
 	SettingsPage* sPage = new SettingsPage(_engine, this);
 	ListSetting* kbSett = new ListSetting(tr("Keyboard sounds"), this);
 	kbSett->addOption(tr("Typewriter"), QVariant::fromValue((IKBSoundProducer*)new TypeWriterSP(this)));
-	connect(kbSett, &AbstractAppSetting::valueChanged, this, [=]() {
+	connect(kbSett, &DisplayedSetting::valueChanged, this, [=]() {
 		setKbProd((IKBSoundProducer*)kbSett->value().value<IKBSoundProducer*>());
 		});
 	sPage->addSetting(kbSett, "General");

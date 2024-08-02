@@ -5,7 +5,7 @@
 #include <qqmlengine.h>
 #include <qquickitem.h>
 #include "executable.h"
-#include "appsetting.h"
+#include "displayedsetting.h"
 #include <qloggingcategory.h>
 #include "typinganalyzer_include.h"
 Q_DECLARE_LOGGING_CATEGORY(LC_AAPPAGE);
@@ -22,7 +22,7 @@ public:
 
 	QUrl iconSource();
 	Q_INVOKABLE virtual QQuickItem* getContent() = 0;
-	Q_INVOKABLE virtual QList<AbstractAppSetting*> settings() const;//Empty list
+	Q_INVOKABLE virtual QList<DisplayedSetting*> settings() const;//Empty list
 signals:
 	void iconSourceChanged();
 private:

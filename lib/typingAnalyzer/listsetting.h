@@ -1,10 +1,10 @@
 #pragma once
-#include "appsetting.h"
+#include "displayedsetting.h"
 #include <qqmlengine.h>
 #include "contentbuilder.h"
 #include "typinganalyzer_include.h"
 
-class TP_EXPORT ListSetting : public AbstractAppSetting
+class TP_EXPORT ListSetting : public DisplayedSetting
 {
 	Q_OBJECT;
 	QML_ELEMENT;

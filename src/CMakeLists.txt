@@ -28,3 +28,4 @@ target_link_libraries(app PRIVATE
 
 set(APP_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}  CACHE INTERNAL "")
 set(APP_BUILD ${CMAKE_CURRENT_BINARY_DIR} CACHE INTERNAL "")
+add_subdirectory(updateManager)

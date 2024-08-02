@@ -18,7 +18,7 @@ ExecutableAppPage::ExecutableAppPage(const QString& name, QObject* parent)
 	:AppPage(name,parent)
 {
 }
-QList<AbstractAppSetting*> AppPage::settings() const
+QList<DisplayedSetting*> AppPage::settings() const
 {
-	return  QList<AbstractAppSetting*>();
+	return  QList<DisplayedSetting*>();
 }

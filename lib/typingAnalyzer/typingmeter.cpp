@@ -36,7 +36,7 @@ void TypingMeter::start()
             emit ratesChanged();
 		}
 		_updateTimer->start();
-		setState(Started);
+		Executable::start();
 	}
 }
 void TypingMeter::stop()
@@ -44,7 +44,7 @@ void TypingMeter::stop()
 	if (state() == Started)
 	{
 		_updateTimer->stop();
-		setState(Stopped);
+		Executable::stop();
 	}
 }
 void TypingMeter::finish()
@@ -52,7 +52,7 @@ void TypingMeter::finish()
 	if (state() != Finished)
 	{
 		_updateTimer->stop();
-		setState(Finished);
+		Executable::finish();
 	}
 }
 typingRate TypingMeter::calcRate()

@@ -1,10 +1,10 @@
 #pragma once
 #include <qobject.h>
-#include "appsetting.h"
+#include "displayedsetting.h"
 #include "contentbuilder.h"
 #include "typinganalyzer_include.h"
 
-class TP_EXPORT SliderSetting : public AbstractAppSetting
+class TP_EXPORT SliderSetting : public DisplayedSetting
 {
 	Q_OBJECT;
 	Q_PROPERTY(int max READ max WRITE setMax NOTIFY maxChanged);

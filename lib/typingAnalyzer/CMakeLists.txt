@@ -16,8 +16,8 @@ set (CPP_SOURCES
 	"wordcounter.cpp" 
 	"typewriterSP.h" 
 	"typewritersp.cpp"
-	"timefocusmodel.cpp"
-	"timefocusmodel.h"
+	"periodsmodel.cpp"
+	"periodsmodel.h"
 	"applicationsettings.h"
 	"applicationsettings.cpp"
 	"soundinterfaces.h"
@@ -35,8 +35,8 @@ set (CPP_SOURCES
 	"apppage.cpp" 
 	"timefocuspage.cpp"
 	"settingslist.h"
-	"timefocusexecutable.h" 
-	"timefocusexecutable.cpp" 
+	"perioddecrementer.h" 
+	"perioddecrementer.cpp" 
 	"executable.h"  
 	"settingspage.h" 
 	"namedobject.cpp" 
@@ -52,9 +52,9 @@ set (CPP_SOURCES
 	"freemodepage.cpp" 
 	"typingrate.h" 
 	"typingrate.cpp" 
-	"appsetting.h" 
+	"displayedsetting.h" 
 	"iqmlcontent.h" 
-	"appsetting.cpp" 
+	"displayedsetting.cpp" 
 	"listsetting.h" 
 	"listsetting.cpp" 
 	"contentbuilder.h" 
@@ -77,7 +77,6 @@ set(RESOURCES
 )
 QT_ADD_QML_MODULE(${LIB_NAME} STATIC
 	URI ${LIB_NAME}
-	PLUGIN_TARGET ${LIB_NAME}
 	SOURCES ${CPP_SOURCES}
 	QML_FILES ${QML_SOURCES}
 	RESOURCES 	${RESOURCES}

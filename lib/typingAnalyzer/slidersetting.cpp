@@ -1,6 +1,6 @@
 #include "slidersetting.h"
 SliderSetting::SliderSetting(const QString& name, QObject* parent)
-	:AbstractAppSetting(name, parent)
+	:DisplayedSetting(name, parent)
 	,_min(0)
 	,_max(1)
 	,_content(nullptr)

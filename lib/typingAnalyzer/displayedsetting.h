@@ -4,7 +4,7 @@
  #include <qqmlengine.h>
  #include "iqmlcontent.h"
 #include "typinganalyzer_include.h"
-class TP_EXPORT AbstractAppSetting  :public NamedObject
+class TP_EXPORT DisplayedSetting  :public NamedObject
 {
 	Q_OBJECT;
 	QML_ELEMENT;
@@ -18,5 +18,5 @@ public:
 signals:
 	void valueChanged();
 protected:
-	explicit AbstractAppSetting(const QString& name,  QObject* parent = nullptr);
+	explicit DisplayedSetting(const QString& name,  QObject* parent = nullptr);
 };
