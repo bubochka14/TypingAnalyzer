@@ -29,7 +29,7 @@ signals:
 	void charCountChanged();
 	void stateChanged();
 protected:
-	inline virtual bool checkSeparator(const QChar&);
+    virtual bool checkSeparator(const QChar&);
 	void setWordCount(quint64);
 	void setCharCount(quint64);
 	void setState(State);
