@@ -67,7 +67,6 @@ void TimeFocusExecutable::resetModel() {
 	for (size_t i = 0; i < _model->rowCount(); i++)
 	{
 		_model->setData(_model->index(i, 0), 0, TimeFocusModel::Completed);
-		qDebug() << _model->data(_model->index(i, 0), TimeFocusModel::Duration);
 		_model->setData(_model->index(i, 0), _model->data(_model->index(i,0),TimeFocusModel::Duration), TimeFocusModel::RemainingTime);
 	}
 }

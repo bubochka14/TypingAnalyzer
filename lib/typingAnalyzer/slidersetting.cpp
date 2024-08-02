@@ -8,7 +8,6 @@ SliderSetting::SliderSetting(const QString& name, QObject* parent)
 {}
 bool SliderSetting::setValue(const QVariant& other)
 {
-	qDebug() << other;
 	if (!other.canConvert<double>() || _value == other.value<double>())
 		return false;
 	if(_value != other.value<double>()){
