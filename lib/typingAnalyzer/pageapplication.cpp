@@ -9,6 +9,7 @@ PageApplication::PageApplication(int argc, char**argv)
     addPage(new FreeModePage(this, _engine, this));
 	setupSettings();
 	_qApp.setQuitOnLastWindowClosed(false);
+    connect(_engine,&QQmlEngine::quit,&_qApp,&QApplication::quit);
 }
 void PageApplication::addPage(AppPage* other)
 {
