@@ -14,10 +14,12 @@ target_include_directories(KeyboardWatcher
 )
 target_sources(KeyboardWatcher PRIVATE "src/winkeyboardinterceptor.h" "src/keyboardinterceptor_private.h")
 target_compile_definitions(KeyboardWatcher PRIVATE SHARED=false)
-#install(TARGETS winKeyboardCapture
-#  LIBRARY DESTINATION ${APP_BUILD}
-#  RUNTIME DESTINATION ${APP_BUILD})
-
+include(GNUInstallDirs)
+install(TARGETS KeyboardWatcher
+    BUNDLE DESTINATION .
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+)   
 target_link_libraries(KeyboardWatcher PRIVATE 
 	Qt6::Core 
 	Qt6::Gui
